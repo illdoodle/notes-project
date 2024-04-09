@@ -1,0 +1,20 @@
+.app {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    background-color: lightblue;
+    align-items: center;
+    justify-content: center;
+}
+
+input, button { 
+    margin: 0;
+    /* padding: 0; */
+    box-sizing: border-box;
+    border-radius: 7.5px;
+}

@@ -1,0 +1,44 @@
+.notes-root {
+    width: 25%;
+    height: 60%;
+    left: 50%;
+    background-color: cornflowerblue;
+    text-align: center;
+}
+
+.notes-input {
+    background-color: greenyellow;
+}
+
+.notes-enter {
+    width: 75%;
+    line-height: 50px;
+    padding-left: 10px;
+}
+
+.notes-submit-btn {
+    width: 15%;
+    height: 40px;
+    margin-left: 5px;
+}
+
+.notes-list {
+    margin-top: 10%;
+    background-color: aqua;
+}
+
+.note {
+    background: green;
+    height: 2.5em;
+    align-content: center;
+}
+
+.note-text {
+    float: left;
+    margin-left: 15px;
+}
+
+.note-delete-btn {
+    float: right;
+    margin-right: 15px;
+}
