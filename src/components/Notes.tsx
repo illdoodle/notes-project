@@ -5,7 +5,7 @@ import NotesItem from './NotesItem';
 function Notes() { 
   const [notes, setNotes] = useState(['bla-bla', 'note2', 'anothernote']);
   
-  // В этой функции есть ерорка, связанная с тем, что noteInput = null и более того, что у него не существует свойства value. Больше ворнинг, чем ошибка. ХЗ как исправить.
+  // В этой функции есть ерорка, связанная с тем, что ВОЗМОЖНО noteInput = null и более того, что у него не существует свойства value. Больше ворнинг, чем ошибка. ХЗ как исправить.
   function addNote(e:any){
     e.preventDefault();
     const noteInput = document.querySelector('.notes-enter');
