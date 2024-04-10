@@ -8,7 +8,7 @@ function Notes() {
   function addNote(e:any){
     e.preventDefault();
     let inputElement = (document.querySelector('#notes-enter') as HTMLInputElement);
-    setNotes([...notes, inputElement.value]);
+    inputElement.value.trim() ? setNotes([...notes, inputElement.value]) : setNotes([...notes, 'очень странная заметка...']);
     inputElement.value = '';
   }
 
