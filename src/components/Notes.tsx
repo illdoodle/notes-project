@@ -1,27 +1,28 @@
 import { useState } from 'react';
-import '../styles/notes.css';
+import styles from '../styles/notes.module.css';
 import NotesItem from './NotesItem';
 
 function Notes() { 
-  const [notes, setNotes] = useState(['bla-bla', 'note2', 'anothernote']);
+  const [notes, setNotes] = useState(['bla-bla', 'bla', 'note3',]);
   
-  // В этой функции есть ерорка, связанная с тем, что ВОЗМОЖНО noteInput = null и более того, что у него не существует свойства value. Больше ворнинг, чем ошибка. ХЗ как исправить.
   function addNote(e:any){
     e.preventDefault();
-    const noteInput = document.querySelector('.notes-enter');
-    console.log(noteInput.value);
+    let inputElement = (document.querySelector('#notes-enter') as HTMLInputElement);
+    setNotes([...notes, inputElement.value]);
+    inputElement.value = '';
   }
+
   return (
-    <div className="notes-root">
-        <div className="notes-header">
+    <div className={styles.root}>
+        <div className={styles.header}>
             <h1>TO-DO LIST</h1>
         </div>
-        <div className='notes-input'>
-            <input type="text" placeholder='Enter...' className='notes-enter'/>
-            <button className="notes-submit-btn" onClick={addNote}>ADD</button>
+        <div className={styles.input}>
+            <input type="text" placeholder='Enter...' className={styles.enter} id="notes-enter"/>
+            <button className={styles.addBtn} onClick={addNote}>ADD</button>
         </div>
-        <div className="notes-list">
-          {notes.map((note) => <NotesItem key={note} text={note}/>)}
+        <div className={styles.list}>
+          {notes.map((note, index) => <NotesItem key={index} id={index + 1} text={note}/>)}
         </div>
     </div>
   )

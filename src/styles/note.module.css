@@ -1,0 +1,21 @@
+.note {
+    background: green;
+    height: 2.5em;
+    align-content: center;
+}
+
+.text {
+    float: left;
+    margin-left: 15px;
+}
+
+.deleteBtn {
+    float: right;
+    margin-right: 15px;
+}
+
+.noteId {
+    padding: 2px;
+    border: 1px dotted red;
+    margin-right: 10px;
+}
