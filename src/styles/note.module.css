@@ -16,6 +16,10 @@
 
 .noteId {
     padding: 2px;
-    border: 1px dotted red;
+    border: 2px dotted red;
     margin-right: 10px;
+}
+
+.checkbox {
+    margin-right: 5px;
 }

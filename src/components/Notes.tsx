@@ -1,28 +1,46 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../styles/notes.module.css';
 import NotesItem from './NotesItem';
 
 function Notes() { 
-  const [notes, setNotes] = useState(['bla-bla', 'bla', 'note3',]);
+  const jsonNotes = localStorage.getItem('notes');
+  const [notes, setNotes] = useState(jsonNotes ? JSON.parse(jsonNotes) : []);
+  const inputElement = (document.querySelector('#notes-enter') as HTMLInputElement);
   
-  function addNote(e:any){
+  function addNote(e:any, element:any){
     e.preventDefault();
-    let inputElement = (document.querySelector('#notes-enter') as HTMLInputElement);
-    inputElement.value.trim() ? setNotes([...notes, inputElement.value]) : setNotes([...notes, 'очень странная заметка...']);
+    setNotes([...notes, {id: notes.length, text: element.value.trim() ? element.value : 'очень странная заметка...'}]);
     inputElement.value = '';
   }
+
+  function removeNote(e:any, note:any) {
+    e.preventDefault();
+    let newNotes = notes;
+    const index = newNotes.findIndex((n:any) => n.id === note.id);
+    newNotes.splice(index, 1);
+    for (let i = index; i < newNotes.length; i++) {
+      newNotes[i].id--;
+    }
+    setNotes([...newNotes]);
+  }
+
+  useEffect(() => {
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes])
 
   return (
     <div className={styles.root}>
         <div className={styles.header}>
-            <h1>TO-DO LIST</h1>
+          <h1>TO-DO LIST</h1>
         </div>
         <div className={styles.input}>
-            <input type="text" placeholder='Enter...' className={styles.enter} id="notes-enter"/>
-            <button className={styles.addBtn} onClick={addNote}>ADD</button>
+          <input type="text" placeholder='Enter...' className={styles.enter} id="notes-enter"
+            onKeyDown={(e) => {e.code == 'Enter' ? addNote(e, inputElement) : true}}
+          />
+          <button className={styles.addBtn} onClick={(e) =>{addNote(e, inputElement)}}>ADD</button>
         </div>
         <div className={styles.list}>
-          {notes.map((note, index) => <NotesItem key={index} id={index + 1} text={note}/>)}
+          {notes.map((note:any) => <NotesItem delete={removeNote} key={note.id} note={note}/>)}
         </div>
     </div>
   )
