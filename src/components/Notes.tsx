@@ -5,12 +5,11 @@ import NotesItem from './NotesItem';
 function Notes() { 
   const jsonNotes = localStorage.getItem('notes');
   const [notes, setNotes] = useState(jsonNotes ? JSON.parse(jsonNotes) : []);
-  const inputElement = (document.querySelector('#notes-enter') as HTMLInputElement);
   
   function addNote(e:any, element:any){
     e.preventDefault();
     setNotes([...notes, {id: notes.length, text: element.value.trim() ? element.value : 'очень странная заметка...'}]);
-    inputElement.value = '';
+    element.value = '';
   }
 
   function removeNote(e:any, note:any) {
@@ -35,9 +34,9 @@ function Notes() {
         </div>
         <div className={styles.input}>
           <input type="text" placeholder='Enter...' className={styles.enter} id="notes-enter"
-            onKeyDown={(e) => {e.code == 'Enter' ? addNote(e, inputElement) : true}}
+            onKeyDown={(e) => {e.code == 'Enter' ? addNote(e, document.querySelector('#notes-enter')) : true}}
           />
-          <button className={styles.addBtn} onClick={(e) =>{addNote(e, inputElement)}}>ADD</button>
+          <button className={styles.addBtn} onClick={(e) => {addNote(e, document.querySelector('#notes-enter'))}}>ADD</button>
         </div>
         <div className={styles.list}>
           {notes.map((note:any) => <NotesItem delete={removeNote} key={note.id} note={note}/>)}
