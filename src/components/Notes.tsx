@@ -5,19 +5,21 @@ import NotesItem from './NotesItem';
 function Notes() { 
   const jsonNotes = localStorage.getItem('notes');
   const [notes, setNotes] = useState(jsonNotes ? JSON.parse(jsonNotes) : []);
+  let newNotes = notes;
   
   function addNote(e:any, element:any){
     e.preventDefault();
-    setNotes([...notes, {id: notes.length, text: element.value.trim() ? element.value : 'очень странная заметка...'}]);
+    for (let i = 0; i < newNotes.length; i++) {
+      newNotes[i].id++;
+    }
+    setNotes([{id: 0, text: element.value.trim() ? element.value : 'очень странная заметка...'}, ...notes]);
     element.value = '';
   }
 
   function removeNote(e:any, note:any) {
     e.preventDefault();
-    let newNotes = notes;
-    const index = newNotes.findIndex((n:any) => n.id === note.id);
-    newNotes.splice(index, 1);
-    for (let i = index; i < newNotes.length; i++) {
+    newNotes.splice(note.id, 1);
+    for (let i = note.id; i < newNotes.length; i++) {
       newNotes[i].id--;
     }
     setNotes([...newNotes]);
