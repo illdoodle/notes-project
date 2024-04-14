@@ -2,24 +2,46 @@
     background: green;
     height: 2.5em;
     align-content: center;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.id {
+    flex: 0 0 auto;
+    width: 25px;
+    height: 100%;
+    float: left;
+    box-sizing: border-box;
+    align-content: center;
+    border: 2px dotted red;
 }
 
 .text {
+    flex: 1;
+    height: 100%;
     float: left;
-    margin-left: 15px;
+    box-sizing: border-box;
+    align-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px dotted orchid;
+    user-select: none;
 }
 
 .deleteBtn {
+    flex: 0 0 auto;
+    height: 100%;
     float: right;
-    margin-right: 15px;
+    box-sizing: border-box;
+    align-content: center;
+    padding: 0px 5px 0px 5px;
+    border: 2px dotted orange;
 }
 
-.noteId {
-    padding: 2px;
-    border: 2px dotted red;
-    margin-right: 10px;
-}
-
-.checkbox {
-    margin-right: 5px;
+.completed {
+    text-decoration: line-through;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
 }
