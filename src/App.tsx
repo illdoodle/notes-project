@@ -1,8 +1,8 @@
 import './styles/app.css';
-import Notes from './components/Notes.tsx';
+import Notes from './components/Notes/Notes.tsx';
 
 function App() {
-  return (
+    return (
     <div className='app'>
       <Notes/>
     </div>

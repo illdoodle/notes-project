@@ -1,9 +1,12 @@
-import styles from '../styles/note.module.css';
+import styles from './Note.module.css';
 
-function NotesItem(props:any) {
+function Note(props) {
   return (
     <div className={styles.note}>
-      <div className={`${styles.id} ${props.note.completed ? styles.completed : ''}`} onClick={() => {props.check(props.note)}}>
+      <div
+        className={`${styles.id} ${props.note.completed ? styles.completed : ''}`}
+        onClick={() => {props.check(props.note)}}
+      >
         <span>{props.note.id}</span>
       </div>
       <div className={styles.text}>
@@ -16,4 +19,4 @@ function NotesItem(props:any) {
   )
 }
 
-export default NotesItem;
+export default Note;
