@@ -7,7 +7,7 @@ function Note(props) {
         className={`${styles.id} ${props.note.completed ? styles.completed : ''}`}
         onClick={() => {props.check(props.note)}}
       >
-        <span>{props.note.id}</span>
+        <span>{props.index}</span>
       </div>
       <div className={styles.text}>
         <span id='text'>{props.note.text}</span>

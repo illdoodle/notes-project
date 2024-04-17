@@ -11,30 +11,20 @@ function Notes() {
   const jsonNotes = localStorage.getItem('notes');
   const [notes, setNotes] = useState<Note[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
   const noteInput = useRef(null);
-  
   function addNote(element){
-    const newNotes = notes;
-    for (let i = 0; i < newNotes.length; i++) {
-      newNotes[i].id++;
-    }
     setNotes([
       {
-        id: 1,
-        text: element.value.trim() ? element.value : `очень странная заметка ${notes.length}`,
+        id: Date.now(),
+        text: element.value.trim() ? element.value : `здесь показать модальное окно`,
         completed: false
       },
-      ...newNotes,
+      ...(notes),
     ]);
     element.value = '';
   }
 
   function removeNote(note) {
-    let newNotes = notes;
-    newNotes.splice(note.id - 1, 1);
-    for (let i = note.id - 1; i < newNotes.length; i++) {
-      newNotes[i].id--;
-    }
-    setNotes([...newNotes]);
+    setNotes(notes.filter((n) => n.id !== note.id));
   }
 
   function setComplete(note){
@@ -74,7 +64,7 @@ function Notes() {
           <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
         </div>
         <div className={styles.list}>
-          {notes.map((note) => <Note delete={removeNote} check={setComplete} key={note.id} note={note}/>)}
+          {notes.map((note, index) => <Note delete={removeNote} check={setComplete} index={index} key={note.id} note={note}/>)}
         </div>
     </div>
   )
