@@ -2,7 +2,7 @@ import React from 'react';
 import cl from './Modal.module.css';
 
 function Modal({children, visible, setVisible}) {
-    const rootClass = [cl.myModal];
+    const rootClass = [cl.modal];
     if(visible){
         rootClass.push(cl.active);
     }
@@ -12,7 +12,7 @@ function Modal({children, visible, setVisible}) {
             onClick={() => {setVisible(false)}}
         >
             <div
-                className={cl.myModalContent}
+                className={cl.modalContent}
                 onClick={(e) => e.stopPropagation()}
             >
                 <img

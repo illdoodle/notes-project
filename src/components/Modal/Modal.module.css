@@ -1,4 +1,4 @@
-.myModal {
+.modal {
     position: fixed;
     left: 0;
     top: 0;
@@ -8,7 +8,7 @@
     background: rgba(0, 0, 0, 0.5);
 }
 
-.myModalContent {
+.modalContent {
     padding: 25px;
     background: lightblue;
     border-radius: 15px;
@@ -16,7 +16,7 @@
     position: relative;
 }
 
-.myModal.active {
+.modal.active {
     display: flex;
     justify-content: center;
     align-items: center;
