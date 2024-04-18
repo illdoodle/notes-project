@@ -1,21 +1,38 @@
 import {useEffect, useRef, useState} from 'react';
 import styles from './Notes.module.css';
 import Note from '../Note/Note';
+import Modal from '../Modal/Modal'
 
 function Notes() {
+
   type Note = {
     id: number,
     text: string,
     completed: boolean,
   }
+
   const jsonNotes = localStorage.getItem('notes');
   const [notes, setNotes] = useState<Note[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
+  const [modal, setModal] = useState(false);
+  const [modalMsg, setModalMsg] = useState("");
   const noteInput = useRef(null);
+
   function addNote(element){
+    if(notes.length >= 6){
+      //Временное решение без пагинации.
+      setModalMsg('Слишком много заметок.');
+      setModal(true);
+      return;
+    }
+    if(!element.value.trim()){
+      setModalMsg('Введите данные.');
+      setModal(true);
+      return;
+    }
     setNotes([
       {
         id: Date.now(),
-        text: element.value.trim() ? element.value : `здесь показать модальное окно`,
+        text: element.value,
         completed: false
       },
       ...(notes),
@@ -44,28 +61,29 @@ function Notes() {
 
   return (
     <div className={styles.root}>
-        <div>
-          <h1>TO-DO LIST</h1>
-          <div className={styles.clear}>
-            <button onClick={() => setNotes([])}>CLEAR</button>
-          </div>
+      <Modal visible={modal} setVisible={setModal}>
+        <span>{modalMsg}</span>
+      </Modal>
+      <div>
+        <h1>TO-DO LIST</h1>
+        <div className={styles.clear}>
+          <button onClick={() => setNotes([])}>CLEAR</button>
         </div>
-        <div className={styles.input}>
-          <input
-            ref={noteInput}
-            type="text"
-            maxLength="50"
-            placeholder='Enter...'
-            className={styles.enter}
-            id="notes-enter"
-            onKeyDown={(e) => {sendNote(e)}}
-            required
-          />
-          <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
-        </div>
-        <div className={styles.list}>
-          {notes.map((note, index) => <Note delete={removeNote} check={setComplete} index={index} key={note.id} note={note}/>)}
-        </div>
+      </div>
+      <div className={styles.input}>
+        <input
+          ref={noteInput}
+          type="text"
+          maxLength="50"
+          placeholder='Enter...'
+          className={styles.enter}
+          onKeyDown={(e) => {sendNote(e)}}
+        />
+        <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
+      </div>
+      <div className={styles.list}>
+        {notes.map((note, index) => <Note delete={removeNote} check={setComplete} index={index} key={note.id} note={note}/>)}
+      </div>
     </div>
   )
 }
