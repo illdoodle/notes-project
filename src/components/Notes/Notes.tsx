@@ -44,6 +44,7 @@ function Notes() {
   }
 
   function removeNote(note) {
+    setNoteVisible(false)
     setNotes(notes.filter((n) => n.id !== note.id));
   }
 
@@ -79,26 +80,32 @@ function Notes() {
           type="text"
           maxLength="50"
           placeholder='Enter...'
-          className={styles.enter}
+          className={styles.inputEnter}
           onKeyDown={(e) => {sendNote(e)}}
         />
         <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
       </div>
       <div className={styles.list}>
+        {/*Удаляется с анимацией только первый удаленный элемент, остальные без, причем будет показывать, что удаляется первый по списку, но в итоге удалится нужный.
+        Если удалить все разом (кнопка clear), то все удалятся с задержкой, но первый с анимацией. */}
         <TransitionGroup>
           {notes.map((note, index) =>
             <CSSTransition
                 in={noteVisible}
                 key={note.id}
                 nodeRef={noteRef}
-                classNames="note"
+                classNames={{
+                  enter: styles.enter,
+                  enterActive: styles.enterActive,
+                  exit: styles.exit,
+                  exitActive: styles.exitActive,
+                }}
                 timeout={1000}
                 unmountOnExit
                 mountOnEnter
             >
               <div ref={noteRef}>
-                {/*По идее при клике на заметку она должна исчезать, но этого не происходит и изменение классов срабатывает если я кликаю именно на кнопку удаления*/}
-                <Note onclick={() => setNoteVisible(false)} delete={removeNote} check={setComplete} index={index} note={note}/>
+                <Note delete={removeNote} check={setComplete} index={index} note={note}/>
               </div>
             </CSSTransition>
           )}

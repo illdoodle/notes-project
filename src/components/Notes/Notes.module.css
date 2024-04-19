@@ -19,7 +19,7 @@
     background-color: greenyellow;
 }
 
-.enter {
+.inputEnter {
     width: 75%;
     line-height: 50px;
     padding-left: 10px;
@@ -35,21 +35,21 @@
     margin-top: 5%;
 }
 
-.note-enter {
+.enter {
     opacity: 0;
     transition: opacity 200ms;
 }
 
-.note-enter-active {
+.enterActive {
     opacity: 1;
 }
 
-.note-exit {
+.exit {
     opacity: 1;
     transition: opacity 200ms;
 }
 
-.note-exit-active {
+.exitActive {
     opacity: 0;
 }
 
