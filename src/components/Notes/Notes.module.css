@@ -34,3 +34,22 @@
 .list {
     margin-top: 5%;
 }
+
+.note-enter {
+    opacity: 0;
+    transition: opacity 200ms;
+}
+
+.note-enter-active {
+    opacity: 1;
+}
+
+.note-exit {
+    opacity: 1;
+    transition: opacity 200ms;
+}
+
+.note-exit-active {
+    opacity: 0;
+}
+

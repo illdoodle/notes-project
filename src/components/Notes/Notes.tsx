@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import styles from './Notes.module.css';
 import Note from '../Note/Note';
 import Modal from '../Modal/Modal'
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 function Notes() {
 
@@ -15,7 +16,9 @@ function Notes() {
   const [notes, setNotes] = useState<Note[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
   const [modal, setModal] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
+  const [noteVisible, setNoteVisible] = useState(true);
   const noteInput = useRef(null);
+  const noteRef = useRef(null);
 
   function addNote(element){
     if(notes.length >= 6){
@@ -82,7 +85,24 @@ function Notes() {
         <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
       </div>
       <div className={styles.list}>
-        {notes.map((note, index) => <Note delete={removeNote} check={setComplete} index={index} key={note.id} note={note}/>)}
+        <TransitionGroup>
+          {notes.map((note, index) =>
+            <CSSTransition
+                in={noteVisible}
+                key={note.id}
+                nodeRef={noteRef}
+                classNames="note"
+                timeout={1000}
+                unmountOnExit
+                mountOnEnter
+            >
+              <div ref={noteRef}>
+                {/*По идее при клике на заметку она должна исчезать, но этого не происходит и изменение классов срабатывает если я кликаю именно на кнопку удаления*/}
+                <Note onclick={() => setNoteVisible(false)} delete={removeNote} check={setComplete} index={index} note={note}/>
+              </div>
+            </CSSTransition>
+          )}
+        </TransitionGroup>
       </div>
     </div>
   )
