@@ -1,7 +1,7 @@
 import styles from './Note.module.css';
 
 function Note(props) {
-  return (
+    return (
     <div className={styles.note}>
       <div
         className={`${styles.id} ${props.note.completed ? styles.completed : ''}`}
@@ -16,7 +16,7 @@ function Note(props) {
         <button onClick={() => {props.delete(props.note)}}>DELETE</button>
       </div>
     </div>
-  )
+    )
 }
 
 export default Note;

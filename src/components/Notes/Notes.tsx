@@ -13,21 +13,22 @@ function Notes() {
   }
 
   const jsonNotes = localStorage.getItem('notes');
-  const [notes, setNotes] = useState<Note[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
+  const [notes, setNotes] = useState <Note[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
   const [modal, setModal] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
   const [noteVisible, setNoteVisible] = useState(true);
   const noteInput = useRef(null);
   const noteRef = useRef(null);
+  //Касательно пункта о "типизировать все структуры данных по аналогии". Непонятно, стоит ли применять <Note[]> так же к setNotes (например и т.д.)
 
-  function addNote(element){
+  function addNote(inputElement:HTMLInputElement){
     if(notes.length >= 6){
       //Временное решение без пагинации.
       setModalMsg('Слишком много заметок.');
       setModal(true);
       return;
     }
-    if(!element.value.trim()){
+    if(!inputElement.value.trim()){
       setModalMsg('Введите данные.');
       setModal(true);
       return;
@@ -35,25 +36,25 @@ function Notes() {
     setNotes([
       {
         id: Date.now(),
-        text: element.value,
+        text: inputElement.value,
         completed: false
       },
       ...(notes),
     ]);
-    element.value = '';
+    inputElement.value = '';
   }
 
-  function removeNote(note) {
-    setNoteVisible(false)
+  function removeNote(note:Note) {
+    setNoteVisible(false);
     setNotes(notes.filter((n) => n.id !== note.id));
   }
 
-  function setComplete(note){
-    note.completed = !note.completed;   
+  function setComplete(note:Note){
+    note.completed = !note.completed;
     setNotes([...notes]);
   }
 
-  function sendNote(e) {
+  function sendNote(e:object) {
     if(e.code == "Enter" || e.target.tagName == "BUTTON"){
       addNote(noteInput.current)
     }
@@ -61,7 +62,7 @@ function Notes() {
   
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes])
+  },[notes])
 
   return (
     <div className={styles.root}>
@@ -89,7 +90,7 @@ function Notes() {
         {/*Удаляется с анимацией только первый удаленный элемент, остальные без, причем будет показывать, что удаляется первый по списку, но в итоге удалится нужный.
         Если удалить все разом (кнопка clear), то все удалятся с задержкой, но первый с анимацией. */}
         <TransitionGroup>
-          {notes.map((note, index) =>
+          {notes.map((note:Note, index:number) =>
             <CSSTransition
                 in={noteVisible}
                 key={note.id}
