@@ -1,38 +1,45 @@
 .root {
+    position: absolute;
+    top: 15%;
     width: 25%;
     height: 60%;
-    left: 50%;
-    background-color: cornflowerblue;
     text-align: center;
 }
 
-.clear {
-    margin-top: -15px;
-    margin-bottom: 15px;
-}
-
-.clear button {
-    width: 100%;
+.headText {
+    border-radius: 8px;
+    background: palegoldenrod;
 }
 
 .input {
-    background-color: greenyellow;
+    height: 10%;
+    padding: 15px 0 15px 0;
 }
 
 .inputEnter {
-    width: 75%;
+    float: left;
+    width: 80%;
     line-height: 50px;
     padding-left: 10px;
+    margin-right: 5px;
 }
 
 .addBtn {
+    float: right;
+    height: 45%;
+    margin-bottom: 5px;
     width: 15%;
-    height: 40px;
-    margin-left: 5px;
+}
+
+.clearBtn{
+    float: right;
+    height: 45%;
+    width: 15%;
 }
 
 .list {
     margin-top: 5%;
+    height: fit-content;
 }
 
 .enter {

@@ -18,7 +18,7 @@
     box-sizing: border-box;
     align-content: center;
     cursor: pointer;
-    border: 2px dotted red;
+    border: 3px dotted lightcoral;
     border-radius: 5px;
     user-select: none;
     margin-left: 5px;
@@ -42,6 +42,10 @@
     padding: 0 5px 0 5px;
 }
 
+.deleteBtn button {
+    height: 100%;
+}
+
 .completed {
-   border: 2px solid green;
+   border: 2px solid lightgreen;
 }

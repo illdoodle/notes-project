@@ -22,7 +22,7 @@ function Notes() {
   //Касательно пункта о "типизировать все структуры данных по аналогии". Непонятно, стоит ли применять <Note[]> так же к setNotes (например и т.д.)
 
   function addNote(inputElement:HTMLInputElement){
-    if(notes.length >= 6){
+    if(notes.length >= 10){
       //Временное решение без пагинации.
       setModalMsg('Слишком много заметок.');
       setModal(true);
@@ -69,11 +69,8 @@ function Notes() {
       <Modal visible={modal} setVisible={setModal}>
         <span>{modalMsg}</span>
       </Modal>
-      <div>
+      <div className={styles.headText}>
         <h1>TO-DO LIST</h1>
-        <div className={styles.clear}>
-          <button onClick={() => setNotes([])}>CLEAR</button>
-        </div>
       </div>
       <div className={styles.input}>
         <input
@@ -85,6 +82,7 @@ function Notes() {
           onKeyDown={(e) => {sendNote(e)}}
         />
         <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
+        <button className={styles.clearBtn} onClick={() => setNotes([])}>CLEAR</button>
       </div>
       <div className={styles.list}>
         {/*Удаляется с анимацией только первый удаленный элемент, остальные без, причем будет показывать, что удаляется первый по списку, но в итоге удалится нужный.
@@ -106,7 +104,7 @@ function Notes() {
                 mountOnEnter
             >
               <div ref={noteRef}>
-                <Note delete={removeNote} check={setComplete} index={index} note={note}/>
+                <Note delete={removeNote} check={setComplete} index={index + 1} note={note}/>
               </div>
             </CSSTransition>
           )}
