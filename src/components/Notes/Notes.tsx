@@ -67,6 +67,7 @@ function Notes() {
   return (
     <div className={styles.root}>
       <Modal visible={modal} setVisible={setModal}>
+        {modal && noteInput.current.blur()}
         <span>{modalMsg}</span>
       </Modal>
       <div className={styles.headText}>

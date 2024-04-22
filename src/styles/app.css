@@ -22,6 +22,7 @@ input, button {
     border-radius: 8px;
     border: 2px solid white;
     background: white;
+    outline: 0;
 }
 
 input:hover, button:hover {
