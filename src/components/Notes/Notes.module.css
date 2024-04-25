@@ -44,19 +44,22 @@
 
 .enter {
     opacity: 0;
-    transition: opacity 200ms;
+    transform: translateX(-350px);
+    transition: all 400ms ease-in;
 }
 
 .enterActive {
+    transform: translateX(0px);
     opacity: 1;
 }
 
 .exit {
     opacity: 1;
-    transition: opacity 200ms;
+    transition: all 400ms ease-in;
 }
 
 .exitActive {
+    transform: translateX(350px);
     opacity: 0;
 }
 

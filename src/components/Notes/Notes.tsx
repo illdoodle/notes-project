@@ -1,24 +1,17 @@
-import {useEffect, useRef, useState} from 'react';
+import {createRef, useEffect, useRef, useState} from 'react';
 import styles from './Notes.module.css';
 import Note from '../Note/Note';
 import Modal from '../Modal/Modal'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import {NoteTypes} from "./Note.types";
 
 function Notes() {
 
-  type Note = {
-    id: number,
-    text: string,
-    completed: boolean,
-  }
-
   const jsonNotes = localStorage.getItem('notes');
-  const [notes, setNotes] = useState <Note[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
-  const [modal, setModal] = useState(false);
+  const [notes, setNotes] = useState <NoteTypes[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
+  const [modal, setModal] = useState (false);
   const [modalMsg, setModalMsg] = useState("");
-  const [noteVisible, setNoteVisible] = useState(true);
   const noteInput = useRef(null);
-  const noteRef = useRef(null);
   //Касательно пункта о "типизировать все структуры данных по аналогии". Непонятно, стоит ли применять <Note[]> так же к setNotes (например и т.д.)
 
   function addNote(inputElement:HTMLInputElement){
@@ -37,15 +30,16 @@ function Notes() {
       {
         id: Date.now(),
         text: inputElement.value,
-        completed: false
+        completed: false,
+        noteRef: createRef(),
       },
       ...(notes),
     ]);
     inputElement.value = '';
+    console.log(notes)
   }
 
   function removeNote(note:Note) {
-    setNoteVisible(false);
     setNotes(notes.filter((n) => n.id !== note.id));
   }
 
@@ -54,19 +48,24 @@ function Notes() {
     setNotes([...notes]);
   }
 
-  function sendNote(e:object) {
+  function sendNote(e) {
     if(e.code == "Enter" || e.target.tagName == "BUTTON"){
       addNote(noteInput.current)
     }
   }
+
+  function closeModal(){
+    setModal(false);
+  }
   
   useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
+    //Временно отключено до внедрения Redux.
+    // localStorage.setItem('notes', JSON.stringify(notes));
   },[notes])
 
   return (
     <div className={styles.root}>
-      <Modal visible={modal} setVisible={setModal}>
+      <Modal visible={modal} onClose={closeModal}>
         {modal && noteInput.current.blur()}
         <span>{modalMsg}</span>
       </Modal>
@@ -86,25 +85,20 @@ function Notes() {
         <button className={styles.clearBtn} onClick={() => setNotes([])}>CLEAR</button>
       </div>
       <div className={styles.list}>
-        {/*Удаляется с анимацией только первый удаленный элемент, остальные без, причем будет показывать, что удаляется первый по списку, но в итоге удалится нужный.
-        Если удалить все разом (кнопка clear), то все удалятся с задержкой, но первый с анимацией. */}
         <TransitionGroup>
           {notes.map((note:Note, index:number) =>
             <CSSTransition
-                in={noteVisible}
                 key={note.id}
-                nodeRef={noteRef}
+                nodeRef={note.noteRef}
                 classNames={{
                   enter: styles.enter,
                   enterActive: styles.enterActive,
                   exit: styles.exit,
                   exitActive: styles.exitActive,
                 }}
-                timeout={1000}
-                unmountOnExit
-                mountOnEnter
+                timeout={500}
             >
-              <div ref={noteRef}>
+              <div ref={note.noteRef}>
                 <Note delete={removeNote} check={setComplete} index={index + 1} note={note}/>
               </div>
             </CSSTransition>

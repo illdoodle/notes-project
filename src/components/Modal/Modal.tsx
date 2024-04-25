@@ -1,13 +1,14 @@
 import React from 'react';
 import cl from './Modal.module.css';
 
-function Modal({children, visible, setVisible}) {
+function Modal({children, visible, onClose}) {
     const rootClass = [cl.modal];
     if(visible){
         rootClass.push(cl.active);
         document.addEventListener('keydown', controlContent);
     }else{
         document.removeEventListener('keydown', controlContent);
+        return;
     }
 
     function controlContent(e) {
@@ -15,16 +16,15 @@ function Modal({children, visible, setVisible}) {
             e.preventDefault();
         }
 
-        // Хотел сделать выключение модалки на Enter, но по каким то причинам даже после и !ДО! скрытия модального окна eventListener остается.
-        // if(e.code == "Enter") {
-        //     setVisible(false);
-        // }
+        if(e.code == "Escape") {
+            onClose();
+        }
     }
 
     return (
         <div
             className={rootClass.join(' ')}
-            onClick={() => {setVisible(false)}}
+            onClick={() => {onClose()}}
         >
             <div
                 className={cl.modalContent}
@@ -34,7 +34,7 @@ function Modal({children, visible, setVisible}) {
                     className={cl.cross}
                     src="src/images/cross.png"
                     alt="cross.png"
-                    onClick={() => {setVisible(false)}}
+                    onClick={() => {onClose()}}
                 />
                 {children}
             </div>
