@@ -1,6 +1,9 @@
 body {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    background-color: lightblue;
 }
 
 .app {
@@ -12,25 +15,27 @@ body {
     display: flex;
     margin: 0;
     padding: 0;
-    background-color: lightblue;
     justify-content: center;
     font-family: "Roboto", serif;
 }
 
-input, button { 
+input, button, .UIButton {
     margin: 0;
-    box-sizing: border-box;
     border-radius: 8px;
     border: 2px solid white;
     background: white;
     outline: 0;
 }
 
-input:hover, input:focus, button:hover, button:focus{
+input:hover, input:focus, button:hover, button:focus, .UIButton:hover {
     border: 2px solid lightcoral;
     transition: border 500ms;
 }
 
-button {
+button, .UIButton {
     cursor: pointer;
+}
+
+.UIButton {
+    padding: 2px;
 }

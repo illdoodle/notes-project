@@ -1,18 +1,15 @@
 import {createRef, useEffect, useRef, useState} from 'react';
 import styles from './Notes.module.css';
-import Note from '../Note/Note';
 import Modal from '../Modal/Modal'
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import {NoteTypes} from "./Note.types";
+import {NoteType} from "./Note.types";
+import NotesList from "./NotesList/NotesList";
 
 function Notes() {
-
   const jsonNotes = localStorage.getItem('notes');
-  const [notes, setNotes] = useState <NoteTypes[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
+  const [notes, setNotes] = useState <NoteType[]>(jsonNotes ? JSON.parse(jsonNotes) : []);
   const [modal, setModal] = useState (false);
   const [modalMsg, setModalMsg] = useState("");
   const noteInput = useRef(null);
-  //Касательно пункта о "типизировать все структуры данных по аналогии". Непонятно, стоит ли применять <Note[]> так же к setNotes (например и т.д.)
 
   function addNote(inputElement:HTMLInputElement){
     if(notes.length >= 10){
@@ -29,39 +26,46 @@ function Notes() {
     setNotes([
       {
         id: Date.now(),
-        text: inputElement.value,
+        title: inputElement.value,
         completed: false,
+        userId: 1,
         noteRef: createRef(),
       },
       ...(notes),
     ]);
     inputElement.value = '';
-    console.log(notes)
   }
 
-  function removeNote(note:Note) {
-    setNotes(notes.filter((n) => n.id !== note.id));
+  function removeNote(note:NoteType) {
+    setNotes(notes.filter((n:NoteType) => n.id !== note.id));
   }
 
-  function setComplete(note:Note){
+  function setComplete(note:NoteType){
     note.completed = !note.completed;
     setNotes([...notes]);
   }
 
   function sendNote(e) {
-    if(e.code == "Enter" || e.target.tagName == "BUTTON"){
-      addNote(noteInput.current)
+    if(e.code && e.code !== "Enter"){
+      return;
     }
+    addNote(noteInput.current)
   }
 
   function closeModal(){
     setModal(false);
   }
-  
+
+  function scrollHandler(){
+    console.log('scroll')
+  }
+
   useEffect(() => {
-    //Временно отключено до внедрения Redux.
-    // localStorage.setItem('notes', JSON.stringify(notes));
-  },[notes])
+    document.addEventListener('scroll', scrollHandler);
+    return () => {
+      document.removeEventListener('scroll', scrollHandler);
+    }
+  }, []);
 
   return (
     <div className={styles.root}>
@@ -81,29 +85,13 @@ function Notes() {
           className={styles.inputEnter}
           onKeyDown={(e) => {sendNote(e)}}
         />
-        <button className={styles.addBtn} onClick={(e) => {sendNote(e)}}>ADD</button>
-        <button className={styles.clearBtn} onClick={() => setNotes([])}>CLEAR</button>
+        <div className={styles.buttons}>
+          <img src="src/images/plus.png" alt="plus.png" className={`UIButton ${styles.add}`} onClick={(e) => {sendNote(e)}}/>
+          <img src="src/images/bin.png" alt="bin.png" className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
+        </div>
       </div>
       <div className={styles.list}>
-        <TransitionGroup>
-          {notes.map((note:Note, index:number) =>
-            <CSSTransition
-                key={note.id}
-                nodeRef={note.noteRef}
-                classNames={{
-                  enter: styles.enter,
-                  enterActive: styles.enterActive,
-                  exit: styles.exit,
-                  exitActive: styles.exitActive,
-                }}
-                timeout={500}
-            >
-              <div ref={note.noteRef}>
-                <Note delete={removeNote} check={setComplete} index={index + 1} note={note}/>
-              </div>
-            </CSSTransition>
-          )}
-        </TransitionGroup>
+        <NotesList removeNote={removeNote} setComplete={setComplete} notes={notes}/>
       </div>
     </div>
   )

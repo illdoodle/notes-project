@@ -10,10 +10,10 @@ function Note(props) {
         <span>{props.index}</span>
       </div>
       <div className={styles.text}>
-        <span id='text'>{props.note.text}</span>
+        <span id='text'>{props.note.title}</span>
       </div>
-      <div className={styles.deleteBtn}>
-        <button onClick={() => {props.delete(props.note)}}>DELETE</button>
+      <div className={styles.delete}>
+        <img src="src/images/bin.png" alt="bin.png" className={`UIButton`} onClick={() => {props.delete(props.note)}}/>
       </div>
     </div>
     )

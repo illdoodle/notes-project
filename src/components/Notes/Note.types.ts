@@ -1,7 +1,8 @@
-export type NoteTypes = {
+export type NoteType = {
     id: number,
-    text: string,
+    title: string,
     completed: boolean,
+    userId: number,
     noteRef: any,
     //Заглушка пока не возьмусь за типизацию проекта.
 }

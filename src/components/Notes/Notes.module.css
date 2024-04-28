@@ -1,45 +1,54 @@
 .root {
     position: absolute;
-    top: 15%;
-    width: 25%;
-    height: 60%;
+    top: 10%;
+    width: 25vw;
     text-align: center;
+    min-height: fit-content;
+    min-width: fit-content;
 }
 
 .headText {
     border-radius: 8px;
-    background: palegoldenrod;
+    background: #b8ffb4;
+    min-width: 225px;
 }
 
 .input {
-    height: 10%;
+    display: flex;
+    flex-direction: row;
+    min-width: 150px;
     padding: 15px 0 15px 0;
 }
 
 .inputEnter {
-    float: left;
-    width: 80%;
     line-height: 50px;
     padding-left: 10px;
     margin-right: 5px;
+    width: 100%;
+    min-width: 100px;
 }
 
-.addBtn {
-    float: right;
-    height: 45%;
-    margin-bottom: 5px;
-    width: 15%;
+.buttons {
+    display: flex;
+    align-items: center;
+    align-content: center;
 }
 
-.clearBtn{
-    float: right;
-    height: 45%;
-    width: 15%;
+.add {
+    margin-right: 5px;
+    width: 40px;
+    height: 40px;
+}
+
+.clear{
+    width: 40px;
+    height: 40px;
 }
 
 .list {
     margin-top: 5%;
     height: fit-content;
+    min-width: fit-content;
 }
 
 .enter {

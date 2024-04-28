@@ -5,9 +5,10 @@
     flex-direction: row;
     align-items: center;
     margin: 5px;
-    background-color: palegoldenrod;
+    background-color: #daffd8;
     border-radius: 5px;
     padding: 5px;
+    min-width: 200px;
 }
 
 .id {
@@ -21,7 +22,7 @@
     border: 3px dotted lightcoral;
     border-radius: 5px;
     user-select: none;
-    margin-left: 5px;
+    margin: 0 5px 0 0;
 }
 
 .text {
@@ -33,19 +34,18 @@
     overflow: hidden;
 }
 
-.deleteBtn {
+.delete {
+    display: flex;
     flex: 0 0 auto;
-    height: 100%;
     float: right;
-    box-sizing: border-box;
     align-content: center;
-    padding: 0 5px 0 5px;
+    align-items: center;
 }
-
-.deleteBtn button {
-    height: 100%;
+.delete img {
+    width: 35px;
+    height: 35px;
 }
 
 .completed {
-   border: 2px solid lightgreen;
+   border: 3px solid lightgreen;
 }
