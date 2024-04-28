@@ -1,36 +1,84 @@
 .root {
-    width: 25%;
-    height: 60%;
-    left: 50%;
-    background-color: cornflowerblue;
+    position: absolute;
+    top: 10%;
+    width: 25vw;
     text-align: center;
+    min-height: fit-content;
+    min-width: 250px;
 }
 
-.clear {
-    margin-top: -15px;
-    margin-bottom: 15px;
-}
-
-.clear button {
-    width: 100%;
+.headText {
+    border-radius: 8px;
+    background: #b8ffb4;
+    min-width: 225px;
 }
 
 .input {
-    background-color: greenyellow;
+    display: flex;
+    flex-direction: row;
+    min-width: 150px;
+    padding: 15px 0 15px 0;
 }
 
-.enter {
-    width: 75%;
+.inputEnter {
     line-height: 50px;
     padding-left: 10px;
+    margin-right: 5px;
+    width: 100%;
+    min-width: 100px;
 }
 
-.addBtn {
-    width: 15%;
+.buttons {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.add {
+    margin-right: 5px;
+    width: 40px;
     height: 40px;
-    margin-left: 5px;
+}
+
+.clear{
+    width: 40px;
+    height: 40px;
 }
 
 .list {
     margin-top: 5%;
+    height: fit-content;
+    min-width: fit-content;
 }
+
+.moreBtn {
+    margin: 10px 0 25px 0;
+}
+
+.moreBtn button {
+    width: 100%;
+    height: 35px;
+    min-width: 100px;
+}
+
+.enter {
+    opacity: 0;
+    transform: translateX(-350px);
+    transition: all 400ms ease-in;
+}
+
+.enterActive {
+    transform: translateX(0px);
+    opacity: 1;
+}
+
+.exit {
+    opacity: 1;
+    transition: all 400ms ease-in;
+}
+
+.exitActive {
+    transform: translateX(350px);
+    opacity: 0;
+}
+
