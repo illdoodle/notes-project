@@ -6,27 +6,25 @@ import styles from "../Notes.module.css";
 
 const NotesList = ({notes, removeNote, setComplete}) => {
     return (
-        <div>
-            <TransitionGroup>
-                {notes.map((note:NoteType, index:number) =>
-                    <CSSTransition
-                        key={note.id}
-                        nodeRef={note.noteRef}
-                        classNames={{
-                            enter: styles.enter,
-                            enterActive: styles.enterActive,
-                            exit: styles.exit,
-                            exitActive: styles.exitActive,
-                        }}
-                        timeout={500}
-                    >
-                        <div ref={note.noteRef}>
-                            <Note delete={removeNote} check={setComplete} index={index + 1} note={note}/>
-                        </div>
-                    </CSSTransition>
-                )}
-            </TransitionGroup>
-        </div>
+        <TransitionGroup className={styles.list}>
+            {notes.map((note:NoteType, index:number) =>
+                <CSSTransition
+                    key={note.id}
+                    nodeRef={note.noteRef}
+                    classNames={{
+                        enter: styles.enter,
+                        enterActive: styles.enterActive,
+                        exit: styles.exit,
+                        exitActive: styles.exitActive,
+                    }}
+                    timeout={500}
+                >
+                    <div className='note-container' ref={note.noteRef}>
+                        <Note delete={removeNote} check={setComplete} index={index + 1} note={note}/>
+                    </div>
+                </CSSTransition>
+            )}
+        </TransitionGroup>
     );
 };
 

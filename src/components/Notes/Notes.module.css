@@ -4,7 +4,7 @@
     width: 25vw;
     text-align: center;
     min-height: fit-content;
-    min-width: fit-content;
+    min-width: 250px;
 }
 
 .headText {
@@ -49,6 +49,16 @@
     margin-top: 5%;
     height: fit-content;
     min-width: fit-content;
+}
+
+.moreBtn {
+    margin: 10px 0 25px 0;
+}
+
+.moreBtn button {
+    width: 100%;
+    height: 35px;
+    min-width: 100px;
 }
 
 .enter {
