@@ -13,7 +13,7 @@ function Note(props) {
             <span id='text'>{props.note.title}</span>
           </div>
           <div className={styles.delete}>
-            <img src="src/images/bin.png" alt="bin.png" className={`UIButton`} onClick={() => {props.delete(props.note)}}/>
+            <img src='src/components/Notes/images/bin.svg' alt='bin.png' className={`UIButton`} onClick={() => {props.delete(props.note)}}/>
           </div>
         </div>
     )

@@ -1,84 +1,81 @@
-  import {createRef, useEffect, useRef, useState} from 'react';
+  import React, {createRef, useEffect, useRef, useState, MutableRefObject} from 'react';
   import styles from './Notes.module.css';
   import Modal from '../Modal/Modal'
-  import {NoteType} from "./Note.types";
-  import NotesList from "./NotesList/NotesList";
-  import Arrow from "../Arrow/Arrow";
-  import axios from "axios";
+  import {NoteType} from './Note.types';
+  import NotesList from '../NotesList/NotesList';
+  import Arrow from '../Arrow/Arrow';
+  import axios from 'axios';
 
-  function Notes() {
+  const Notes: React.FC = () => {
     const [notes, setNotes] = useState <NoteType[]>([]);
-    const [modal, setModal] = useState (false);
-    const [modalMsg, setModalMsg] = useState("");
-    const [arrow, setArrow] = useState(false);
-    const noteInput = useRef(null);
+    const [modal, setModal] = useState <boolean>(false);
+    const [modalMsg, setModalMsg] = useState <string>('');
+    const [arrow, setArrow] = useState <boolean>(false);
+    const noteInput = useRef<HTMLInputElement>(null);
 
-    const notesPerLoad = 10;
-    const [visibleNotesAmount, setVisibleNotesAmount] = useState(notesPerLoad);
-    const [currentNotes, setCurrentNotes] = useState([]);
+    const notesPerLoad: number = 10;
+    const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
+    const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
 
-    function addNote(inputElement:HTMLInputElement){
-      if(!inputElement.value.trim()){
-        setModalMsg('Введите данные.');
-        setModal(true);
-        return;
-      }
+    function addNote() {
       setNotes([
         {
           id: Date.now(),
-          title: inputElement.value,
+          title: noteInput.current.value,
           completed: false,
           userId: 1,
           noteRef: createRef(),
         },
         ...(notes),
       ]);
-      inputElement.value = '';
+      noteInput.current.value = '';
     }
 
     function removeNote(note:NoteType) {
       setNotes(notes.filter((n:NoteType) => n.id !== note.id));
     }
 
-    function setComplete(note:NoteType){
+    function setComplete(note:NoteType) {
       note.completed = !note.completed;
       setNotes([...notes]);
     }
 
-    function sendNote(e) {
-      if(e.code && e.code !== "Enter"){
+    function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null) {
+      if(!ref.current.value.trim()) {
+        setModalMsg('Введите данные.');
+        setModal(true);
         return;
       }
-      addNote(noteInput.current)
+      callback();
     }
 
     function loadNotes() {
       if(visibleNotesAmount <= notes.length) {
-        // !!!По некоторым неведанным мне причинам функция проходит по много раз сразу, нужно фиксить.!!!
+        // !!!По некоторым неведанным мне причинам функция проходит по много раз сразу, нужно фиксить!!!
         // useMemo?
         setVisibleNotesAmount(visibleNotesAmount + notesPerLoad);
       }
     }
 
-    function updateNotes(){
+    function updateNotes() {
       setCurrentNotes(notes.slice(0, visibleNotesAmount));
     }
 
-    function scrollHandler(){
-      const scrolled = document.documentElement.clientHeight + document.documentElement.scrollTop;
-      const documentHeight = document.documentElement.scrollHeight;
+    function scrollHandler() {
+      const scrolled: number = document.documentElement.clientHeight + document.documentElement.scrollTop;
+      const documentHeight: number = document.documentElement.scrollHeight;
 
-      if(scrolled > document.documentElement.clientHeight){
+      if(scrolled > document.documentElement.clientHeight) {
         setArrow(true);
-      }else{
+      } else {
         setArrow(false);
       }
       if(scrolled >= documentHeight) loadNotes();
     }
+    document.addEventListener('scroll', scrollHandler);
 
-    document.addEventListener('scroll', scrollHandler)
     useEffect(() => {
-      axios.get('https://jsonplaceholder.typicode.com/todos?_limit=50').then(response => setNotes(response.data));
+      axios.get('https://jsonplaceholder.typicode.com/todos?_limit=50').then((response: axios.AxiosResponse<NoteType[]>) => setNotes(response.data));
       window.scrollTo(0, 0); // По каким то причинам не работает. После обновления страницы она немного сдвинута вниз.
       return () => {
         document.removeEventListener('scroll', scrollHandler);
@@ -108,15 +105,15 @@
         <div className={styles.input}>
           <input
             ref={noteInput}
-            type="text"
-            maxLength="50"
+            type='text'
+            maxLength='50'
             placeholder='Enter...'
             className={styles.inputEnter}
-            onKeyDown={(e) => {sendNote(e)}}
+            onKeyDown={(e) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}
           />
           <div className={styles.buttons}>
-            <img src="src/images/plus.png" alt="plus.png" className={`UIButton ${styles.add}`} onClick={(e) => {sendNote(e)}}/>
-            <img src="src/images/bin.png" alt="bin.png" className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
+            <img src='src/components/Notes/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {send(addNote, noteInput)}}/>
+            <img src='src/components/Notes/images/bin.svg' alt='bin.png' className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
           </div>
         </div>
         <NotesList removeNote={removeNote} setComplete={setComplete} notes={currentNotes}/>

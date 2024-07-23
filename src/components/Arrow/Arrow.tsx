@@ -3,8 +3,8 @@ import styles from './Arrow.module.css';
 
 const Arrow = ({close}) => {
     return (
-        <div className={`${styles.arrow} UIButton`} onClick={() => {close()}}>
-            <img src="src/images/arrow.png" alt="arrow.png"/>
+        <div className={`${styles.container} UIButton`} onClick={() => {close()}}>
+            <img src='src/components/Arrow/arrow.svg' alt='arrow.png'/>
         </div>
     );
 };
