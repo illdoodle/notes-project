@@ -17,7 +17,7 @@
     const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
     const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
 
-    function addNote() {
+    function addNote(): void {
       setNotes([
         {
           id: Date.now(),
@@ -31,16 +31,16 @@
       noteInput.current.value = '';
     }
 
-    function removeNote(note:NoteType) {
+    function removeNote(note:NoteType): void {
       setNotes(notes.filter((n:NoteType) => n.id !== note.id));
     }
 
-    function setComplete(note:NoteType) {
+    function setComplete(note:NoteType): void {
       note.completed = !note.completed;
       setNotes([...notes]);
     }
 
-    function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null) {
+    function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null): void {
       if(!ref.current.value.trim()) {
         setModalMsg('Введите данные.');
         setModal(true);
@@ -49,7 +49,7 @@
       callback();
     }
 
-    function loadNotes() {
+    function loadNotes(): void {
       if(visibleNotesAmount <= notes.length) {
         // !!!По некоторым неведанным мне причинам функция проходит по много раз сразу, нужно фиксить!!!
         // useMemo?
@@ -57,11 +57,11 @@
       }
     }
 
-    function updateNotes() {
+    function updateNotes(): void {
       setCurrentNotes(notes.slice(0, visibleNotesAmount));
     }
 
-    function scrollHandler() {
+    function scrollHandler(): void {
       const scrolled: number = document.documentElement.clientHeight + document.documentElement.scrollTop;
       const documentHeight: number = document.documentElement.scrollHeight;
 
@@ -109,7 +109,7 @@
             maxLength='50'
             placeholder='Enter...'
             className={styles.inputEnter}
-            onKeyDown={(e) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}
           />
           <div className={styles.buttons}>
             <img src='src/components/Notes/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {send(addNote, noteInput)}}/>

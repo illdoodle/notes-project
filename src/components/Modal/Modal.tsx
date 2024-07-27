@@ -1,9 +1,14 @@
 import React from 'react';
 import cl from './Modal.module.css';
 
-function Modal({children, visible, onClose}) {
+type argsType = {
+    children: object,
+    visible: boolean,
+    onClose: () => void,
+}
+const Modal: React.FC = (props: argsType) => {
     const rootClass = [cl.modal];
-    if(visible) {
+    if(props.visible) {
         rootClass.push(cl.active);
         document.addEventListener('keydown', controlContent);
     } else {
@@ -11,32 +16,31 @@ function Modal({children, visible, onClose}) {
         return;
     }
 
-    function controlContent(e) {
+    function controlContent(e): void {
         if(e.code == 'Tab') {
             e.preventDefault();
         }
-
         if(e.code == 'Escape') {
-            onClose();
+            props.onClose();
         }
     }
 
     return (
         <div
             className={rootClass.join(' ')}
-            onClick={() => {onClose()}}
+            onClick={() => {props.onClose()}}
         >
             <div
                 className={cl.modalContent}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
             >
                 <img
                     className={cl.cross}
                     src='src/components/Modal/cross.svg'
                     alt='cross.png'
-                    onClick={() => {onClose()}}
+                    onClick={() => {props.onClose()}}
                 />
-                {children}
+                {props.children}
             </div>
         </div>
     )
