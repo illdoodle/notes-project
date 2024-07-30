@@ -1,10 +1,10 @@
-  import React, {createRef, useEffect, useRef, useState, MutableRefObject} from 'react';
+  import React, {createRef, useEffect, useRef, useState, MutableRefObject, ReactNode} from 'react';
   import styles from './Notes.module.css';
   import Modal from '../Modal/Modal'
   import {NoteType} from './Note.types';
   import NotesList from '../NotesList/NotesList';
   import Arrow from '../Arrow/Arrow';
-  import axios from 'axios';
+  import axios, {AxiosResponse} from 'axios';
 
   const Notes: React.FC = () => {
     const [notes, setNotes] = useState <NoteType[]>([]);
@@ -17,7 +17,7 @@
     const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
     const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
 
-    function addNote(): void {
+    function addNote() {
       setNotes([
         {
           id: Date.now(),
@@ -31,16 +31,16 @@
       noteInput.current.value = '';
     }
 
-    function removeNote(note:NoteType): void {
+    function removeNote(note:NoteType) {
       setNotes(notes.filter((n:NoteType) => n.id !== note.id));
     }
 
-    function setComplete(note:NoteType): void {
+    function setComplete(note:NoteType) {
       note.completed = !note.completed;
       setNotes([...notes]);
     }
 
-    function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null): void {
+    function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null) {
       if(!ref.current.value.trim()) {
         setModalMsg('Введите данные.');
         setModal(true);
@@ -49,7 +49,7 @@
       callback();
     }
 
-    function loadNotes(): void {
+    function loadNotes() {
       if(visibleNotesAmount <= notes.length) {
         // !!!По некоторым неведанным мне причинам функция проходит по много раз сразу, нужно фиксить!!!
         // useMemo?
@@ -57,11 +57,11 @@
       }
     }
 
-    function updateNotes(): void {
+    function updateNotes() {
       setCurrentNotes(notes.slice(0, visibleNotesAmount));
     }
 
-    function scrollHandler(): void {
+    function scrollHandler() {
       const scrolled: number = document.documentElement.clientHeight + document.documentElement.scrollTop;
       const documentHeight: number = document.documentElement.scrollHeight;
 
@@ -72,10 +72,16 @@
       }
       if(scrolled >= documentHeight) loadNotes();
     }
+
+    function blurNoteInput():ReactNode {
+      noteInput.current.blur();
+      return <></>
+    }
+
     document.addEventListener('scroll', scrollHandler);
 
     useEffect(() => {
-      axios.get('https://jsonplaceholder.typicode.com/todos?_limit=50').then((response: axios.AxiosResponse<NoteType[]>) => setNotes(response.data));
+      axios.get<NoteType[]>('https://jsonplaceholder.typicode.com/todos?_limit=50').then((response: AxiosResponse<NoteType[]>) => setNotes(response.data));
       window.scrollTo(0, 0); // По каким то причинам не работает. После обновления страницы она немного сдвинута вниз.
       return () => {
         document.removeEventListener('scroll', scrollHandler);
@@ -96,7 +102,7 @@
           visible={modal}
           onClose={() => setModal(false)}
         >
-          {modal && noteInput.current.blur()}
+          {modal && blurNoteInput()}
           <span>{modalMsg}</span>
         </Modal>
         <div className={styles.headText}>
@@ -106,7 +112,7 @@
           <input
             ref={noteInput}
             type='text'
-            maxLength='50'
+            maxLength={50}
             placeholder='Enter...'
             className={styles.inputEnter}
             onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}

@@ -2,13 +2,13 @@ import styles from './Note.module.css';
 import React from "react";
 import {NoteType} from "../Notes/Note.types";
 
-type argsType = {
+type ArgsType = {
     index: number,
     note: NoteType,
     check: (note: NoteType) => void,
     delete: (note: NoteType) => void,
 }
-const Note: React.FC = (props: argsType) => {
+const Note: React.FC<ArgsType> = (props) => {
     return (
         <div className={styles.note}>
           <div

@@ -1,22 +1,22 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import cl from './Modal.module.css';
 
-type argsType = {
-    children: object,
+type ArgsType = {
+    children: ReactNode,
     visible: boolean,
     onClose: () => void,
 }
-const Modal: React.FC = (props: argsType) => {
+const Modal: React.FC<ArgsType> = (props) => {
     const rootClass = [cl.modal];
     if(props.visible) {
         rootClass.push(cl.active);
         document.addEventListener('keydown', controlContent);
     } else {
         document.removeEventListener('keydown', controlContent);
-        return;
+        return <></>;
     }
 
-    function controlContent(e): void {
+    function controlContent(e: KeyboardEvent) {
         if(e.code == 'Tab') {
             e.preventDefault();
         }

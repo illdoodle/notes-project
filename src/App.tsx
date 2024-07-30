@@ -2,7 +2,7 @@ import './styles/app.css';
 import Notes from './components/Notes/Notes.tsx';
 import React from 'react';
 
-function App() {
+const App:React.FC = () => {
     return (
         <div className='app'>
           <Notes/>

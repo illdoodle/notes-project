@@ -4,12 +4,12 @@ import {NoteType} from '../Notes/Note.types';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import styles from '../Notes/Notes.module.css';
 
-type argsType = {
+type ArgsType = {
     notes: NoteType[],
-    removeNote: void,
-    setComplete: void,
+    removeNote: (note: NoteType) => void,
+    setComplete: (note: NoteType) => void,
 }
-const NotesList: React.FC = (props: argsType) => {
+const NotesList: React.FC<ArgsType> = (props) => {
     return (
         <TransitionGroup className={styles.list}>
             {props.notes.map((note: NoteType, index: number) =>
