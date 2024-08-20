@@ -1,6 +1,6 @@
 import styles from './Note.module.css';
 import React from "react";
-import {NoteType} from "../Notes/Note.types";
+import {NoteType} from "../../types/note";
 
 type ArgsType = {
     index: number,
@@ -21,7 +21,7 @@ const Note: React.FC<ArgsType> = (props) => {
             <span id='text'>{props.note.title}</span>
           </div>
           <div className={styles.delete}>
-            <img src='src/components/Notes/images/bin.svg' alt='bin.png' className={`UIButton`} onClick={() => {props.delete(props.note)}}/>
+            <img src='src/components/images/bin.svg' alt='bin.png' className={`UIButton`} onClick={() => {props.delete(props.note)}}/>
           </div>
         </div>
     )

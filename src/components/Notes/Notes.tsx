@@ -1,106 +1,116 @@
-  import React, {createRef, useEffect, useRef, useState, MutableRefObject, ReactNode} from 'react';
-  import styles from './Notes.module.css';
-  import Modal from '../Modal/Modal'
-  import {NoteType} from './Note.types';
-  import NotesList from '../NotesList/NotesList';
-  import Arrow from '../Arrow/Arrow';
-  import axios, {AxiosResponse} from 'axios';
+import React, {createRef, useEffect, useRef, useState, MutableRefObject, ReactNode} from 'react';
+import styles from './Notes.module.css';
+import Modal from '../Modal/Modal'
+import {NoteType} from '../../types/note';
+import NotesList from '../NotesList/NotesList';
+import Arrow from '../Arrow/Arrow';
+import axios, {AxiosResponse} from 'axios';
+import {useActions} from "../../hooks/useActions";
+import {useScroll} from "../../hooks/useScroll";
 
-  const Notes: React.FC = () => {
-    const [notes, setNotes] = useState <NoteType[]>([]);
-    const [modal, setModal] = useState <boolean>(false);
-    const [modalMsg, setModalMsg] = useState <string>('');
-    const [arrow, setArrow] = useState <boolean>(false);
-    const noteInput = useRef<HTMLInputElement>(null);
+const Notes: React.FC = () => {
+  const [notes, setNotes] = useState <NoteType[]>([]);
+  const [modal, setModal] = useState <boolean>(false);
+  const [modalMsg, setModalMsg] = useState <string>('');
+  const noteInput = useRef<HTMLInputElement>(null);
+  const {setArrow} = useActions();
 
-    const notesPerLoad: number = 10;
-    const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
-    const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
+  const notesPerLoad: number = 10;
+  const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
+  const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
 
-    function addNote() {
-      setNotes([
-        {
-          id: Date.now(),
-          title: noteInput.current.value,
-          completed: false,
-          userId: 1,
-          noteRef: createRef(),
-        },
-        ...(notes),
-      ]);
-      noteInput.current.value = '';
+  //После рефактора на redux заняться декомпозицией.
+
+  function addNote() {
+    setNotes([
+      {
+        id: Date.now(),
+        title: noteInput.current.value,
+        completed: false,
+        userId: 1,
+        noteRef: createRef(),
+      },
+      ...(notes),
+    ]);
+    noteInput.current.value = '';
+  }
+
+  function removeNote(note:NoteType) {
+    setNotes(notes.filter((n:NoteType) => n.id !== note.id));
+  }
+
+  function setComplete(note:NoteType) {
+    note.completed = !note.completed;
+    setNotes([...notes]);
+  }
+
+  function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null) {
+    if(!ref.current.value.trim()) {
+      setModalMsg('Введите данные.');
+      setModal(true);
+      return;
+    }
+    callback();
+  }
+
+  function updateNotes() {
+    setCurrentNotes(notes.slice(0, visibleNotesAmount));
+  }
+
+  function loadNotes() {
+    if(visibleNotesAmount <= notes.length) {
+      setVisibleNotesAmount(visibleNotesAmount + notesPerLoad);
+    }
+  }
+
+  //После переноса notes на redux эту функцию вынести в файл useScroll
+  function scrollHandler() {
+    const scrollData = useScroll();
+    if(scrollData.scrolled > document.documentElement.clientHeight) {
+      setArrow(true);
+    } else {
+      setArrow(false);
     }
 
-    function removeNote(note:NoteType) {
-      setNotes(notes.filter((n:NoteType) => n.id !== note.id));
+    if(scrollData.scrolled >= scrollData.documentHeight) {
+      loadNotes();
     }
+  }
 
-    function setComplete(note:NoteType) {
-      note.completed = !note.completed;
-      setNotes([...notes]);
-    }
+  function blurNoteInput():ReactNode {
+    noteInput.current.blur();
+    return <></>
+  }
 
-    function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null) {
-      if(!ref.current.value.trim()) {
-        setModalMsg('Введите данные.');
-        setModal(true);
-        return;
-      }
-      callback();
-    }
+  //Чтобы при первом скролле вернуться в начало страницы, т.к. при первом скролле высота документа не увеличивается.
+  if(visibleNotesAmount == notesPerLoad * 2) window.scrollTo(0, 0);
 
-    function loadNotes() {
-      if(visibleNotesAmount <= notes.length) {
-        // !!!По некоторым неведанным мне причинам функция проходит по много раз сразу, нужно фиксить!!!
-        // useMemo?
-        setVisibleNotesAmount(visibleNotesAmount + notesPerLoad);
-      }
-    }
+  useEffect(() => {
+    axios.get<NoteType[]>('https://jsonplaceholder.typicode.com/todos?_limit=50')
+      .then((response: AxiosResponse<NoteType[]>) => {
+        setNotes(response.data)
+      });
+  }, [])
 
-    function updateNotes() {
-      setCurrentNotes(notes.slice(0, visibleNotesAmount));
-    }
 
-    function scrollHandler() {
-      const scrolled: number = document.documentElement.clientHeight + document.documentElement.scrollTop;
-      const documentHeight: number = document.documentElement.scrollHeight;
-
-      if(scrolled > document.documentElement.clientHeight) {
-        setArrow(true);
-      } else {
-        setArrow(false);
-      }
-      if(scrolled >= documentHeight) loadNotes();
-    }
-
-    function blurNoteInput():ReactNode {
-      noteInput.current.blur();
-      return <></>
-    }
-
+  useEffect(() => {
     document.addEventListener('scroll', scrollHandler);
+    return () => {
+      document.removeEventListener('scroll', scrollHandler);
+    }
+  }, [notes, visibleNotesAmount])
 
-    useEffect(() => {
-      axios.get<NoteType[]>('https://jsonplaceholder.typicode.com/todos?_limit=50').then((response: AxiosResponse<NoteType[]>) => setNotes(response.data));
-      window.scrollTo(0, 0); // По каким то причинам не работает. После обновления страницы она немного сдвинута вниз.
-      return () => {
-        document.removeEventListener('scroll', scrollHandler);
-      }
-    }, [])
+  useEffect(() => {
+    console.log(notes)
+    updateNotes();
+  }, [notes, visibleNotesAmount])
 
-    useEffect(() => {
-      updateNotes();
-    }, [notes, visibleNotesAmount])
-
-    return (
+  return (
       <div className={styles.root}>
-        {arrow && <Arrow close={() => {
-          setArrow(false);
-          window.scrollTo(0, 0);
-        }}/>}
+        <Arrow />
         <Modal
-          visible={modal}
-          onClose={() => setModal(false)}
+            visible={modal}
+            onClose={() => setModal(false)}
         >
           {modal && blurNoteInput()}
           <span>{modalMsg}</span>
@@ -110,16 +120,16 @@
         </div>
         <div className={styles.input}>
           <input
-            ref={noteInput}
-            type='text'
-            maxLength={50}
-            placeholder='Enter...'
-            className={styles.inputEnter}
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}
+              ref={noteInput}
+              type='text'
+              maxLength={50}
+              placeholder='Enter...'
+              className={styles.inputEnter}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}
           />
           <div className={styles.buttons}>
-            <img src='src/components/Notes/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {send(addNote, noteInput)}}/>
-            <img src='src/components/Notes/images/bin.svg' alt='bin.png' className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
+            <img src='src/components/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {send(addNote, noteInput)}}/>
+            <img src='src/components/images/bin.svg' alt='bin.png' className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
           </div>
         </div>
         <NotesList removeNote={removeNote} setComplete={setComplete} notes={currentNotes}/>
@@ -130,8 +140,8 @@
           }}>MORE NOTES</button>
         </div>
       </div>
-    )
-  }
+  )
+}
 
-  export default Notes;
+export default Notes;
 

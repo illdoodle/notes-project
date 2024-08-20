@@ -36,7 +36,7 @@ const Modal: React.FC<ArgsType> = (props) => {
             >
                 <img
                     className={cl.cross}
-                    src='src/components/Modal/cross.svg'
+                    src='src/components/images/cross.svg'
                     alt='cross.png'
                     onClick={() => {props.onClose()}}
                 />

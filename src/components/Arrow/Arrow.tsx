@@ -1,13 +1,19 @@
 import React from 'react';
 import styles from './Arrow.module.css';
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {ArrowState} from "../../types/arrow";
+import {useActions} from "../../hooks/useActions";
 
-type ArrowProps = {
-    close: () => void,
-}
-const Arrow: React.FC<ArrowProps>= ({close}) => {
+const Arrow: React.FC = () => {
+    const arrow: ArrowState = useTypedSelector(state => state.arrow);
+    const {setArrow} = useActions();
+    const scrollUp = () => {
+        setArrow(false);
+        window.scrollTo(0, 0);
+    }
     return (
-        <div className={`${styles.container} UIButton`} onClick={() => {close()}}>
-            <img src='src/components/Arrow/arrow.svg' alt='arrow.png'/>
+        <div className={`${styles.container} UIButton`} onClick={() => scrollUp()} hidden={!arrow.visible}>
+            <img src='src/components/images/arrow.svg' alt='arrow.png'/>
         </div>
     );
 };

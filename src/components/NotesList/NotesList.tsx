@@ -1,6 +1,6 @@
 import React from 'react';
 import Note from '../Note/Note';
-import {NoteType} from '../Notes/Note.types';
+import {NoteType} from '../../types/note';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import styles from '../Notes/Notes.module.css';
 
