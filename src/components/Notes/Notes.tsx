@@ -5,19 +5,21 @@ import {NoteType} from '../../types/note';
 import NotesList from '../NotesList/NotesList';
 import Arrow from '../Arrow/Arrow';
 import axios, {AxiosResponse} from 'axios';
-import {useActions} from "../../hooks/useActions";
 import {useScroll} from "../../hooks/useScroll";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {ModalState} from "../../types/modal";
+import {useActions} from "../../hooks/useActions";
 
 const Notes: React.FC = () => {
-  const [notes, setNotes] = useState <NoteType[]>([]);
-  const [modal, setModal] = useState <boolean>(false);
-  const [modalMsg, setModalMsg] = useState <string>('');
-  const noteInput = useRef<HTMLInputElement>(null);
-  const {setArrow} = useActions();
-
   const notesPerLoad: number = 10;
   const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
   const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
+  const [notes, setNotes] = useState <NoteType[]>([]);
+  const noteInput: MutableRefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+
+  const {setArrow, setModal} = useActions();
+  const [modalMsg, setModalMsg] = useState <string>('');
+  const modal: ModalState = useTypedSelector(state => state.modal)
 
   //После рефактора на redux заняться декомпозицией.
 
@@ -82,7 +84,7 @@ const Notes: React.FC = () => {
     return <></>
   }
 
-  //Чтобы при первом скролле вернуться в начало страницы, т.к. при первом скролле высота документа не увеличивается.
+  //Чтобы при первом скролле вернуться в начало страницы, т.к. при первом скролле высота документа не увеличивается (некуда скроллить).
   if(visibleNotesAmount == notesPerLoad * 2) window.scrollTo(0, 0);
 
   useEffect(() => {
@@ -92,27 +94,21 @@ const Notes: React.FC = () => {
       });
   }, [])
 
-
   useEffect(() => {
+    updateNotes();
     document.addEventListener('scroll', scrollHandler);
     return () => {
       document.removeEventListener('scroll', scrollHandler);
     }
   }, [notes, visibleNotesAmount])
 
-  useEffect(() => {
-    console.log(notes)
-    updateNotes();
-  }, [notes, visibleNotesAmount])
-
   return (
       <div className={styles.root}>
         <Arrow />
         <Modal
-            visible={modal}
-            onClose={() => setModal(false)}
+            visible={modal.visible}
         >
-          {modal && blurNoteInput()}
+          {modal.visible && blurNoteInput()}
           <span>{modalMsg}</span>
         </Modal>
         <div className={styles.headText}>

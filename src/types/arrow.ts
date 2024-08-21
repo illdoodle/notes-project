@@ -10,5 +10,3 @@ export type ArrowAction = {
     type: ArrowActionTypes.SET_ARROW;
     payload: boolean,
 }
-
-

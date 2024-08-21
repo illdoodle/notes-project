@@ -1,13 +1,15 @@
 import React, {ReactNode} from 'react';
 import cl from './Modal.module.css';
+import {useActions} from "../../hooks/useActions";
 
-type ArgsType = {
+type PropsType = {
     children: ReactNode,
     visible: boolean,
-    onClose: () => void,
 }
-const Modal: React.FC<ArgsType> = (props) => {
+
+const Modal: React.FC = (props: PropsType) => {
     const rootClass = [cl.modal];
+    const {setModal} = useActions();
     if(props.visible) {
         rootClass.push(cl.active);
         document.addEventListener('keydown', controlContent);
@@ -21,14 +23,14 @@ const Modal: React.FC<ArgsType> = (props) => {
             e.preventDefault();
         }
         if(e.code == 'Escape') {
-            props.onClose();
+            setModal(false);
         }
     }
 
     return (
         <div
             className={rootClass.join(' ')}
-            onClick={() => {props.onClose()}}
+            onClick={() => {setModal(false)}}
         >
             <div
                 className={cl.modalContent}
@@ -38,7 +40,7 @@ const Modal: React.FC<ArgsType> = (props) => {
                     className={cl.cross}
                     src='src/components/images/cross.svg'
                     alt='cross.png'
-                    onClick={() => {props.onClose()}}
+                    onClick={() => {setModal(false)}}
                 />
                 {props.children}
             </div>
