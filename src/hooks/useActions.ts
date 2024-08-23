@@ -3,6 +3,7 @@ import {ActionCreator, bindActionCreators, Dispatch} from "redux";
 import {ArrowAction} from "../types/arrow";
 import {ModalAction} from "../types/modal";
 import ActionCreators from "../store/action-creators/actionCreators";
+import {NotesAction} from "../types/note";
 
 export const useActions = () => {
     const dispatch: Dispatch = useDispatch();
@@ -11,4 +12,5 @@ export const useActions = () => {
 
 type Actions =
     ArrowAction |
-    ModalAction;
+    ModalAction |
+    NotesAction;

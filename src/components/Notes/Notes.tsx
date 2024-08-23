@@ -4,7 +4,6 @@ import Modal from '../Modal/Modal'
 import {NoteType} from '../../types/note';
 import NotesList from '../NotesList/NotesList';
 import Arrow from '../Arrow/Arrow';
-import axios, {AxiosResponse} from 'axios';
 import {useScroll} from "../../hooks/useScroll";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {ModalState} from "../../types/modal";
@@ -20,6 +19,9 @@ const Notes: React.FC = () => {
   const {setArrow, setModal} = useActions();
   const [modalMsg, setModalMsg] = useState <string>('');
   const modal: ModalState = useTypedSelector(state => state.modal)
+
+  const loadedNotes = useTypedSelector(state => state.notes)
+  const {fetchNotes} = useActions();
 
   //После рефактора на redux заняться декомпозицией.
 
@@ -88,19 +90,27 @@ const Notes: React.FC = () => {
   if(visibleNotesAmount == notesPerLoad * 2) window.scrollTo(0, 0);
 
   useEffect(() => {
-    axios.get<NoteType[]>('https://jsonplaceholder.typicode.com/todos?_limit=50')
-      .then((response: AxiosResponse<NoteType[]>) => {
-        setNotes(response.data)
-      });
-  }, [])
-
-  useEffect(() => {
     updateNotes();
     document.addEventListener('scroll', scrollHandler);
     return () => {
       document.removeEventListener('scroll', scrollHandler);
     }
   }, [notes, visibleNotesAmount])
+
+
+  //Промежуточный итог, реализована чисто редаксовская подгрузка.
+  useEffect(() => {
+     fetchNotes();
+  }, [])
+
+  useEffect(() => {
+    if (loadedNotes.notes.length > 0) {
+      setNotes(loadedNotes.notes);
+    }
+  }, [loadedNotes.loading])
+
+  if (loadedNotes.loading) return <h1>Идёт загрузка...</h1>;
+  if (loadedNotes.error) return <h1>Ошибка: {loadedNotes.error}</h1>;
 
   return (
       <div className={styles.root}>
