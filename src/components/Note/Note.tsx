@@ -13,6 +13,7 @@ const Note: React.FC<PropsType> = (props: PropsType) => {
     const notes = useTypedSelector(state => state.notes)
     const {setNotes} = useActions();
 
+    //TODO использовать аннонимные функции, желательно
     function removeNote(note: NoteType) {
         setNotes(notes.notes.filter((n: NoteType) => n.id !== note.id));
     }
@@ -34,6 +35,8 @@ const Note: React.FC<PropsType> = (props: PropsType) => {
             <span id='text'>{props.note.title}</span>
           </div>
           <div className={styles.delete}>
+            {/* TODO Не использовать аннонимные функции в TSX. Кнопку реализовать отдельным компонентом
+            {/* TODO При использовании ссылок на картинки, картинки должны находится в папке notes-project/public/images */}
             <img src='src/components/images/bin.svg' alt='bin.png' className={`UIButton`} onClick={() => {removeNote(props.note)}}/>
           </div>
         </div>

@@ -11,6 +11,9 @@ const Arrow: React.FC = () => {
         setArrow(false);
         window.scrollTo(0, 0);
     }
+
+    // TODO Не использовать аннонимные функции в TSX.
+    // TODO При использовании ссылок на картинки, картинки должны находится в папке notes-project/public/images
     return (
         <div className={`${styles.container} UIButton`} onClick={() => scrollUp()} hidden={!arrow.visible}>
             <img src='src/components/images/arrow.svg' alt='arrow.png'/>

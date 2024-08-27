@@ -3,6 +3,7 @@ import Notes from './components/Notes/Notes.tsx';
 import React from 'react';
 
 const App:React.FC = () => {
+    //TODO выглядит как костыль, подумать о том как убрать
     window.onbeforeunload = () => {
         window.scrollTo(0, 0);
     }
