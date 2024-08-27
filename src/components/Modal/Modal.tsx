@@ -7,7 +7,7 @@ type PropsType = {
     visible: boolean,
 }
 
-const Modal: React.FC = (props: PropsType) => {
+const Modal: React.FC<PropsType> = (props: PropsType) => {
     const rootClass = [cl.modal];
     const {setModal} = useActions();
     if(props.visible) {

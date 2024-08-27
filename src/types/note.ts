@@ -18,6 +18,7 @@ export enum notesActionType {
     FETCH_NOTES = 'FETCH_NOTES',
     FETCH_NOTES_SUCCESS = 'FETCH_NOTES_SUCCESS',
     FETCH_NOTES_ERROR = 'FETCH_NOTES_ERROR',
+    SET_NOTES = 'SET_NOTES',
 }
 
 type FetchNotesAction = {
@@ -32,4 +33,9 @@ type FetchNotesActionError = {
     payload: string,
 }
 
-export type NotesAction = FetchNotesAction | FetchNotesActionSuccess | FetchNotesActionError;
+type SetNotesAction = {
+    type: notesActionType.SET_NOTES,
+    payload: NoteType[],
+}
+
+export type NotesAction = FetchNotesAction | FetchNotesActionSuccess | FetchNotesActionError | SetNotesAction;

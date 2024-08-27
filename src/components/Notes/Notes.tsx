@@ -13,61 +13,42 @@ const Notes: React.FC = () => {
   const notesPerLoad: number = 10;
   const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
   const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
-  const [notes, setNotes] = useState <NoteType[]>([]);
   const noteInput: MutableRefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
-
-  const {setArrow, setModal} = useActions();
   const [modalMsg, setModalMsg] = useState <string>('');
   const modal: ModalState = useTypedSelector(state => state.modal)
 
-  const loadedNotes = useTypedSelector(state => state.notes)
-  const {fetchNotes} = useActions();
+  const notes = useTypedSelector(state => state.notes)
+  const {fetchNotes, setNotes, setArrow, setModal} = useActions();
 
-  //После рефактора на redux заняться декомпозицией.
-
-  function addNote() {
-    setNotes([
-      {
-        id: Date.now(),
-        title: noteInput.current.value,
-        completed: false,
-        userId: 1,
-        noteRef: createRef(),
-      },
-      ...(notes),
-    ]);
-    noteInput.current.value = '';
-  }
-
-  function removeNote(note:NoteType) {
-    setNotes(notes.filter((n:NoteType) => n.id !== note.id));
-  }
-
-  function setComplete(note:NoteType) {
-    note.completed = !note.completed;
-    setNotes([...notes]);
-  }
-
-  function send(callback: () => void, ref: MutableRefObject<HTMLInputElement> = null) {
-    if(!ref.current.value.trim()) {
+  function addNote(title: string) {
+    if(!title.trim()) {
       setModalMsg('Введите данные.');
       setModal(true);
       return;
     }
-    callback();
+    setNotes([
+      {
+        id: Date.now(),
+        title,
+        completed: false,
+        userId: 1,
+        noteRef: createRef(),
+      },
+      ...(notes.notes),
+    ]);
+    noteInput.current.value = '';
   }
 
   function updateNotes() {
-    setCurrentNotes(notes.slice(0, visibleNotesAmount));
+    setCurrentNotes(notes.notes.slice(0, visibleNotesAmount));
   }
 
   function loadNotes() {
-    if(visibleNotesAmount <= notes.length) {
+    if(visibleNotesAmount <= notes.notes.length) {
       setVisibleNotesAmount(visibleNotesAmount + notesPerLoad);
     }
   }
 
-  //После переноса notes на redux эту функцию вынести в файл useScroll
   function scrollHandler() {
     const scrollData = useScroll();
     if(scrollData.scrolled > document.documentElement.clientHeight) {
@@ -81,9 +62,9 @@ const Notes: React.FC = () => {
     }
   }
 
-  function blurNoteInput():ReactNode {
+  function blurNoteInput(): ReactNode {
     noteInput.current.blur();
-    return <></>
+    return <></>;
   }
 
   //Чтобы при первом скролле вернуться в начало страницы, т.к. при первом скролле высота документа не увеличивается (некуда скроллить).
@@ -97,20 +78,18 @@ const Notes: React.FC = () => {
     }
   }, [notes, visibleNotesAmount])
 
-
-  //Промежуточный итог, реализована чисто редаксовская подгрузка.
   useEffect(() => {
      fetchNotes();
   }, [])
 
   useEffect(() => {
-    if (loadedNotes.notes.length > 0) {
-      setNotes(loadedNotes.notes);
+    if (notes.notes.length > 0) {
+      setNotes(notes.notes);
     }
-  }, [loadedNotes.loading])
+  }, [notes.loading])
 
-  if (loadedNotes.loading) return <h1>Идёт загрузка...</h1>;
-  if (loadedNotes.error) return <h1>Ошибка: {loadedNotes.error}</h1>;
+  if (notes.loading) return <h1>Идёт загрузка...</h1>;
+  if (notes.error) return <h1>Ошибка: {notes.error}</h1>;
 
   return (
       <div className={styles.root}>
@@ -131,14 +110,14 @@ const Notes: React.FC = () => {
               maxLength={50}
               placeholder='Enter...'
               className={styles.inputEnter}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? send(addNote, noteInput) : null}}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? addNote(noteInput.current.value) : null}}
           />
           <div className={styles.buttons}>
-            <img src='src/components/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {send(addNote, noteInput)}}/>
+            <img src='src/components/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {addNote(noteInput.current.value)}}/>
             <img src='src/components/images/bin.svg' alt='bin.png' className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
           </div>
         </div>
-        <NotesList removeNote={removeNote} setComplete={setComplete} notes={currentNotes}/>
+        <NotesList notes={currentNotes}/>
         <div className={styles.moreBtn}>
           <button onClick={(e:any) => {
             loadNotes();

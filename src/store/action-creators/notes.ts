@@ -15,3 +15,7 @@ export const fetchNotes = () => {
         }
     }
 }
+
+export const setNotes = (notes): NotesAction => {
+    return {type: notesActionType.SET_NOTES, payload: notes};
+}

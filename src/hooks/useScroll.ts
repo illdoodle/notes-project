@@ -1,7 +1,3 @@
-// import {useActions} from "./useActions";
-
-
-//getScrollData()
 export const useScroll = () => {
     return {
         scrolled: document.documentElement.clientHeight + document.documentElement.scrollTop,
@@ -10,17 +6,16 @@ export const useScroll = () => {
     }
 }
 
-// export const scrollHandler = () => {
-    // const {setArrow} = useActions()
-    // const scrollData = getScrollData();
-    //
-    // if(scrollData.scrolled > scrollData.clientHeight) {
-    //     setArrow(true);
-    // } else {
-    //     setArrow(false);
-    // }
-    //
-    // if(scrollData.scrolled >= scrollData.documentHeight) {
-    //     loadNotes();
-    // }
+// export const useScroll = (setArrow) => {
+//     const scrollData = getScrollData();
+//
+//     if(scrollData.scrolled > scrollData.clientHeight) {
+//         setArrow(true);
+//     } else {
+//         setArrow(false);
+//     }
+//
+//     if(scrollData.scrolled >= scrollData.documentHeight) {
+//         loadNotes();
+//     }
 // }
