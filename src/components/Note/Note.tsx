@@ -26,7 +26,7 @@ const Note: React.FC<PropsType> = (props: PropsType) => {
         <div className={styles.note}>
           <div
             className={`${styles.id} ${props.note.completed ? styles.completed : ''}`}
-            onClick={() => {setComplete(props.note)}}
+            onClick={setComplete.bind(this, props.note)}
           >
             <span>{props.index}</span>
           </div>
@@ -34,7 +34,7 @@ const Note: React.FC<PropsType> = (props: PropsType) => {
             <span id='text'>{props.note.title}</span>
           </div>
           <div className={styles.delete}>
-            <img src='src/components/images/bin.svg' alt='bin.png' className={`UIButton`} onClick={() => {removeNote(props.note)}}/>
+            <img src='src/public/images/bin.svg' alt='bin.png' className={`UIButton`} onClick={removeNote.bind(this, props.note)}/>
           </div>
         </div>
     )

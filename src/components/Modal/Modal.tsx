@@ -10,6 +10,7 @@ type PropsType = {
 const Modal: React.FC<PropsType> = (props: PropsType) => {
     const rootClass = [cl.modal];
     const {setModal} = useActions();
+
     if(props.visible) {
         rootClass.push(cl.active);
         document.addEventListener('keydown', controlContent);
@@ -27,20 +28,24 @@ const Modal: React.FC<PropsType> = (props: PropsType) => {
         }
     }
 
+    function stopPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+    }
+
     return (
         <div
             className={rootClass.join(' ')}
-            onClick={() => {setModal(false)}}
+            onClick={setModal.bind(this,false)}
         >
             <div
                 className={cl.modalContent}
-                onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+                onClick={stopPropagation}
             >
                 <img
                     className={cl.cross}
-                    src='src/components/images/cross.svg'
+                    src='src/public/images/cross.svg'
                     alt='cross.png'
-                    onClick={() => {setModal(false)}}
+                    onClick={setModal.bind(this,false)}
                 />
                 {props.children}
             </div>

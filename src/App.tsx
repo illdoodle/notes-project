@@ -1,14 +1,15 @@
 import './styles/app.css';
-import Notes from './components/Notes/Notes.tsx';
+import NotesPage from './components/Notes/NotesPage.tsx';
 import React from 'react';
 
 const App:React.FC = () => {
+    //Сделать сохранение notes.
     window.onbeforeunload = () => {
         window.scrollTo(0, 0);
     }
     return (
         <div className='app'>
-          <Notes/>
+          <NotesPage/>
         </div>
     )
 }

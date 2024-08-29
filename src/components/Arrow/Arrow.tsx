@@ -7,13 +7,13 @@ import {useActions} from "../../hooks/useActions";
 const Arrow: React.FC = () => {
     const arrow: ArrowState = useTypedSelector(state => state.arrow);
     const {setArrow} = useActions();
-    const scrollUp = () => {
+    function scrollUp() {
         setArrow(false);
         window.scrollTo(0, 0);
     }
     return (
-        <div className={`${styles.container} UIButton`} onClick={() => scrollUp()} hidden={!arrow.visible}>
-            <img src='src/components/images/arrow.svg' alt='arrow.png'/>
+        <div className={`${styles.container} UIButton`} onClick={scrollUp} hidden={!arrow.visible}>
+            <img src='src/public/images/arrow.svg' alt='arrow.png'/>
         </div>
     );
 };

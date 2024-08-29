@@ -8,14 +8,14 @@ import {useScroll} from "../../hooks/useScroll";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {ModalState} from "../../types/modal";
 import {useActions} from "../../hooks/useActions";
+import {notesPerLoad} from "../../config/notes";
 
-const Notes: React.FC = () => {
-  const notesPerLoad: number = 10;
+const NotesPage: React.FC = () => {
   const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(notesPerLoad);
   const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
-  const noteInput: MutableRefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
   const [modalMsg, setModalMsg] = useState <string>('');
   const modal: ModalState = useTypedSelector(state => state.modal)
+  const noteInput: MutableRefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
   const notes = useTypedSelector(state => state.notes)
   const {fetchNotes, setNotes, setArrow, setModal} = useActions();
@@ -67,6 +67,24 @@ const Notes: React.FC = () => {
     return <></>;
   }
 
+  function checkKeyAndAddNote(e: React.KeyboardEvent<HTMLInputElement>) {
+    if(e.code == 'Enter') {
+      addNote(noteInput.current.value)
+    }
+  }
+
+  function moreNotes(e: React.MouseEvent<HTMLButtonElement>) {
+    //Надо сделать, чтобы по нажатию этой кнопки подгружалось еще больше нотесов с сервера.
+    //По идее, для этого потребуется для начала развернуть предыдущий массив с нотесами, а потом уже добавлять развернутый зафетченный.
+    //fetchNotes();
+    loadNotes();
+    (e.target as HTMLButtonElement).blur();
+  }
+
+  function sendNote() {
+    addNote(noteInput.current.value)
+  }
+
   //Чтобы при первом скролле вернуться в начало страницы, т.к. при первом скролле высота документа не увеличивается (некуда скроллить).
   if(visibleNotesAmount == notesPerLoad * 2) window.scrollTo(0, 0);
 
@@ -82,21 +100,13 @@ const Notes: React.FC = () => {
      fetchNotes();
   }, [])
 
-  useEffect(() => {
-    if (notes.notes.length > 0) {
-      setNotes(notes.notes);
-    }
-  }, [notes.loading])
-
   if (notes.loading) return <h1>Идёт загрузка...</h1>;
   if (notes.error) return <h1>Ошибка: {notes.error}</h1>;
 
   return (
       <div className={styles.root}>
         <Arrow />
-        <Modal
-            visible={modal.visible}
-        >
+        <Modal visible={modal.visible}>
           {modal.visible && blurNoteInput()}
           <span>{modalMsg}</span>
         </Modal>
@@ -110,23 +120,20 @@ const Notes: React.FC = () => {
               maxLength={50}
               placeholder='Enter...'
               className={styles.inputEnter}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {e.code == 'Enter' ? addNote(noteInput.current.value) : null}}
+              onKeyDown={checkKeyAndAddNote}
           />
           <div className={styles.buttons}>
-            <img src='src/components/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={() => {addNote(noteInput.current.value)}}/>
-            <img src='src/components/images/bin.svg' alt='bin.png' className={`UIButton ${styles.clear}`} onClick={() => setNotes([])}/>
+            <img src='src/public/images/plus.svg' alt='plus.png' className={`UIButton ${styles.add}`} onClick={sendNote}/>
+            <img src='src/public/images/bin.svg' alt='bin.png' className={`UIButton ${styles.clear}`} onClick={setNotes.bind(this,[])}/>
           </div>
         </div>
         <NotesList notes={currentNotes}/>
         <div className={styles.moreBtn}>
-          <button onClick={(e:any) => {
-            loadNotes();
-            e.target.blur();
-          }}>MORE NOTES</button>
+          <button onClick={moreNotes}>MORE NOTES</button>
         </div>
       </div>
   )
 }
 
-export default Notes;
+export default NotesPage;
 
