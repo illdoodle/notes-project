@@ -24,7 +24,7 @@ const Modal: React.FC<PropsType> = (props: PropsType) => {
             e.preventDefault();
         }
         if(e.code == 'Escape') {
-            setModal(false);
+            setModal({visible: false, message: null});
         }
     }
 
@@ -35,7 +35,7 @@ const Modal: React.FC<PropsType> = (props: PropsType) => {
     return (
         <div
             className={rootClass.join(' ')}
-            onClick={setModal.bind(this,false)}
+            onClick={setModal.bind(this,{visible: false, message: null})}
         >
             <div
                 className={cl.modalContent}
@@ -45,7 +45,7 @@ const Modal: React.FC<PropsType> = (props: PropsType) => {
                     className={cl.cross}
                     src='src/public/images/cross.svg'
                     alt='cross.png'
-                    onClick={setModal.bind(this,false)}
+                    onClick={setModal.bind(this,{visible: false, message: null})}
                 />
                 {props.children}
             </div>

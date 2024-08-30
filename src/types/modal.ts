@@ -1,5 +1,6 @@
 export type ModalState = {
     visible: boolean,
+    message: string | null,
 }
 
 export enum ModalActionTypes {
@@ -8,7 +9,7 @@ export enum ModalActionTypes {
 
 export type ModalAction = {
     type: ModalActionTypes.SET_MODAL;
-    payload: boolean,
+    payload: ModalState,
 }
 
 

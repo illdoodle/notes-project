@@ -1,5 +1,5 @@
 import './styles/app.css';
-import NotesPage from './components/Notes/NotesPage.tsx';
+import NotesPage from './components/NotesPage/NotesPage.tsx';
 import React from 'react';
 
 const App:React.FC = () => {

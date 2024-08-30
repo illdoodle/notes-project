@@ -1,7 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
-import {ModalAction, ModalActionTypes} from "../../types/modal";
+import {ModalAction, ModalActionTypes, ModalState} from "../../types/modal";
 
-export const setModal = (modalState): ModalAction => {
+export const setModal = (modalState: ModalState): ModalAction => {
     return {type: ModalActionTypes.SET_MODAL, payload: modalState};
 }

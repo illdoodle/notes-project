@@ -1,1 +1,1 @@
-export const notesPerLoad: number = 10;
+export const NOTES_PER_LOAD: number = 10;
