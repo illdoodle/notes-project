@@ -58,8 +58,7 @@ const NotesPage: React.FC = () => {
         <NotesPageInput/>
         <NotesState/>
         <NotesList notes={currentNotes}/>
-        {/*Временно отключил, пока не разберусь как правильно фетчить доп. нотесы.*/}
-        {/*<MoreNotesButton/>*/}
+        <MoreNotesButton/>
       </div>
   )
 }

@@ -7,11 +7,10 @@ export type NotesState = {
 }
 
 export type NoteType = {
-    userId: number,
     id: number,
     title: string,
     completed: boolean,
-    noteRef: RefObject<HTMLElement>,
+    noteRef: RefObject<HTMLElement> | null,
 }
 
 export enum notesActionType {

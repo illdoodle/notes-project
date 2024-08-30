@@ -9,7 +9,15 @@ export const fetchNotes = (oldNotes: NoteType[]) => {
         try{
             dispatch({type: notesActionType.FETCH_NOTES});
             const response: AxiosResponse<NoteType[]> = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=50');
-            dispatch({type: notesActionType.FETCH_NOTES_SUCCESS, payload: [...oldNotes, ...response.data]});
+            const newData = response.data.map((note: NoteType) =>{
+                return {
+                    id: Math.round(Math.random() * 1000000),
+                    title: note.title,
+                    completed: note.completed,
+                    noteRef: null,
+                }
+            })
+            dispatch({type: notesActionType.FETCH_NOTES_SUCCESS, payload: [...oldNotes, ...newData]});
         } catch (e) {
             dispatch({type: notesActionType.FETCH_NOTES_ERROR, payload: e.message});
         }
