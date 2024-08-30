@@ -3,7 +3,7 @@ import styles from "../NotesPage/NotesPage.module.css";
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 
-const NotesPageInput = () => {
+const NoteInput = () => {
     const {setModal, setNotes} = useActions();
     const notes = useTypedSelector(state => state.notes)
     const noteInput: MutableRefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
@@ -54,4 +54,4 @@ const NotesPageInput = () => {
     );
 };
 
-export default NotesPageInput;
+export default NoteInput;
