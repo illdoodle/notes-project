@@ -3,7 +3,7 @@ import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import styles from "../NotesPage/NotesPage.module.css";
 
-const MoreNotesButton = () => {
+const MoreNotesButton: React.FC = () => {
     const {fetchNotes} = useActions();
     const notes = useTypedSelector(state => state.notes);
     function moreNotes(e: React.MouseEvent<HTMLButtonElement>) {
@@ -12,7 +12,7 @@ const MoreNotesButton = () => {
     }
     return (
         <div className={styles.moreBtn}>
-            <button onClick={moreNotes}>MORE NOTES</button>
+            <button onClick={moreNotes}>FETCH NOTES</button>
         </div>
     );
 };

@@ -1,22 +1,16 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styles from './NotesPage.module.css';
 import Modal from '../Modal/Modal'
 import Arrow from '../Arrow/Arrow';
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {ModalState} from "../../types/modal";
-import {useActions} from "../../hooks/useActions";
-import NotesLoadingState from "../NotesLoadingState/NotesLoadingState";
+import NotesPageState from "../NotesPageState/NotesPageState";
 import NoteInput from "../NoteInput/NoteInput";
 import MoreNotesButton from "../MoreNotesButton/MoreNotesButton";
 import NotesPagination from "../NotesPagination/NotesPagination";
 
 const NotesPage: React.FC = () => {
-  const modal: ModalState = useTypedSelector(state => state.modal)
-  const {fetchNotes} = useActions();
-
-  useEffect(() => {
-     fetchNotes([]);
-  }, [])
+  const modal: ModalState = useTypedSelector(state => state.modal);
 
   return (
       <div className={styles.root}>
@@ -28,7 +22,7 @@ const NotesPage: React.FC = () => {
           <span>{modal.message}</span>
         </Modal>
         <NoteInput/>
-        <NotesLoadingState/>
+        <NotesPageState/>
         <NotesPagination/>
         <MoreNotesButton/>
       </div>

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NOTES_PER_LOAD} from "../../config/notes";
 import {NotesState, NoteType} from "../../types/note";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
@@ -6,7 +6,7 @@ import {useActions} from "../../hooks/useActions";
 import {useScroll} from "../../hooks/useScroll";
 import NotesList from "../NotesList/NotesList";
 
-const NotesPagination = () => {
+const NotesPagination: React.FC = () => {
     const [visibleNotesAmount, setVisibleNotesAmount] = useState <number>(NOTES_PER_LOAD);
     const [currentNotes, setCurrentNotes] = useState <NoteType[]>([]);
     const notes: NotesState = useTypedSelector(state => state.notes)

@@ -3,7 +3,7 @@ import styles from "../NotesPage/NotesPage.module.css";
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 
-const NoteInput = () => {
+const NoteInput: React.FC = () => {
     const {setModal, setNotes} = useActions();
     const notes = useTypedSelector(state => state.notes)
     const noteInput: MutableRefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
