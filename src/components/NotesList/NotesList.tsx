@@ -1,16 +1,19 @@
 import React from 'react';
-import Note from "../Note/Note";
-import {NoteType} from "../Note.types";
-import {CSSTransition, TransitionGroup} from "react-transition-group";
-import styles from "../Notes.module.css";
+import Note from '../Note/Note';
+import {NoteType} from '../../types/note';
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
+import styles from '../NotesPage/NotesPage.module.css';
 
-const NotesList = ({notes, removeNote, setComplete}) => {
+type ArgsType = {
+    notes: NoteType[],
+}
+
+const NotesList: React.FC<ArgsType> = (props) => {
     return (
         <TransitionGroup className={styles.list}>
-            {notes.map((note:NoteType, index:number) =>
+            {props.notes.map((note: NoteType, index: number) =>
                 <CSSTransition
                     key={note.id}
-                    nodeRef={note.noteRef}
                     classNames={{
                         enter: styles.enter,
                         enterActive: styles.enterActive,
@@ -19,9 +22,7 @@ const NotesList = ({notes, removeNote, setComplete}) => {
                     }}
                     timeout={500}
                 >
-                    <div className='note-container' ref={note.noteRef}>
-                        <Note delete={removeNote} check={setComplete} index={index + 1} note={note}/>
-                    </div>
+                    <Note index={index + 1} note={note}/>
                 </CSSTransition>
             )}
         </TransitionGroup>

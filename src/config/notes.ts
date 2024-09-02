@@ -1,0 +1,1 @@
+export const NOTES_PER_LOAD: number = 10;

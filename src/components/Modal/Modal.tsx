@@ -1,42 +1,53 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import cl from './Modal.module.css';
+import {useActions} from "../../hooks/useActions";
 
-function Modal({children, visible, onClose}) {
+type PropsType = {
+    children: ReactNode,
+    visible: boolean,
+}
+
+const Modal: React.FC<PropsType> = (props: PropsType) => {
     const rootClass = [cl.modal];
-    if(visible){
+    const {setModal} = useActions();
+
+    if(props.visible) {
         rootClass.push(cl.active);
         document.addEventListener('keydown', controlContent);
-    }else{
+    } else {
         document.removeEventListener('keydown', controlContent);
-        return;
+        return <></>;
     }
 
-    function controlContent(e) {
-        if(e.code == "Tab") {
+    function controlContent(e: KeyboardEvent) {
+        if(e.code == 'Tab') {
             e.preventDefault();
         }
-
-        if(e.code == "Escape") {
-            onClose();
+        if(e.code == 'Escape') {
+            setModal({visible: false, message: null});
         }
+    }
+
+    function stopPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
     }
 
     return (
         <div
             className={rootClass.join(' ')}
-            onClick={() => {onClose()}}
+            onClick={setModal.bind(this,{visible: false, message: null})}
         >
             <div
                 className={cl.modalContent}
-                onClick={(e) => e.stopPropagation()}
+                onClick={stopPropagation}
             >
                 <img
                     className={cl.cross}
-                    src="src/images/cross.png"
-                    alt="cross.png"
-                    onClick={() => {onClose()}}
+                    src='src/public/images/cross.svg'
+                    alt='cross.png'
+                    onClick={setModal.bind(this,{visible: false, message: null})}
                 />
-                {children}
+                {props.children}
             </div>
         </div>
     )
